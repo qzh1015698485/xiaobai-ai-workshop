@@ -1,0 +1,622 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>小白AI工坊 — 建材人的AI实战基地</title>
+<style>
+:root{--bg:#07070a;--bg2:#0e0e12;--bg3:#16161c;--text:#e0e0e6;--text2:#88889a;--text3:#555566;--border:#22223a;--accent:#00d4ff;--gold:#FDD000;--green:#00ff87;--pink:#ff64d4}
+body.light{--bg:#f0f0f2;--bg2:#fff;--bg3:#e8e8ec;--text:#1a1a22;--text2:#66667a;--text3:#9999aa;--border:#ddd}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background .3s,color .3s;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg3)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.pbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:200;transition:width .1s}
+.nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(7,7,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px}
+.ni{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:52px}
+.nl{display:flex;align-items:center;gap:8px;cursor:pointer;z-index:1}
+.lr{width:26px;height:26px;border-radius:50%;background:conic-gradient(var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#0a0a0a}
+.nl span{font-size:15px;font-weight:700;color:var(--accent)}.nl span.gld{color:var(--gold)}
+.nr{display:flex;align-items:center;gap:10px;z-index:1}
+.nlk{display:flex;gap:10px}
+.nlk a{color:var(--text2);text-decoration:none;font-size:11px;cursor:pointer;transition:all .2s;padding:3px 0;border-bottom:2px solid transparent;white-space:nowrap}
+.nlk a:hover,.nlk a.active{color:var(--accent);border-color:var(--accent)}
+.tt{border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:13px;background:var(--bg3)}
+
+.hero{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:120px 20px 40px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:55vh}
+@media(max-width:860px){.hero{grid-template-columns:1fr;text-align:center;min-height:auto}}
+.hl{z-index:1}.hero h1{font-size:clamp(26px,4vw,42px);background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;margin-bottom:10px;line-height:1.2}
+.hero .sub{font-size:14px;color:var(--text2);margin-bottom:16px;max-width:420px}
+.hero-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.hero-tags span{padding:3px 10px;border:1px solid var(--border);border-radius:12px;font-size:10px;color:var(--text2)}
+.hst{display:flex;gap:24px;flex-wrap:wrap}.hst .st{text-align:center}.hst .nm{font-size:20px;font-weight:700;color:var(--text)}.hst .lb{font-size:10px;color:var(--text3)}
+.hr{position:relative;display:flex;justify-content:center}
+.him{width:clamp(160px,20vw,260px);border-radius:16px;box-shadow:0 0 60px rgba(0,212,255,.05);mask-image:linear-gradient(to bottom,#000 65%,transparent 100%);animation:fl 6s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 20px}
+.st{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;scroll-margin-top:65px}
+.st span{font-size:11px;color:var(--text3);font-weight:400}
+.aib{display:inline-block;padding:1px 8px;background:linear-gradient(90deg,var(--accent),var(--gold));color:#0a0a0a;border-radius:8px;font-size:8px;font-weight:700;margin-left:4px;vertical-align:middle}
+.ff{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.fb{padding:3px 12px;border:1px solid var(--border);border-radius:12px;font-size:10px;color:var(--text2);cursor:pointer;background:transparent;transition:all .2s}
+.fb:hover{border-color:var(--text2);color:var(--text)}.fb.act{background:var(--accent);color:#0a0a0a;border-color:var(--accent);font-weight:600}
+
+/* 功能网格 - 通用 */
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px}
+@media(max-width:900px){.grid4,.grid3,.grid2{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.grid4,.grid3,.grid2{grid-template-columns:1fr}}
+.card{border:1px solid var(--border);border-radius:10px;padding:14px;transition:all .2s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--accent);background:var(--bg2);transform:translateY(-2px)}
+.card .ic{font-size:20px;margin-bottom:6px}.card h3{font-size:13px;color:var(--text);margin-bottom:3px}
+.card p{font-size:11px;color:var(--text2);line-height:1.4}
+.card .pr{margin-top:6px;height:2px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.card .br{height:100%;border-radius:2px}.card .pl{font-size:9px;color:var(--text3);margin-top:2px}
+
+/* API条 */
+.ab{border:1px solid var(--accent);border-radius:8px;padding:8px 14px;margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:rgba(0,212,255,.02)}
+.ab .lbl{font-size:10px;color:var(--text2);flex-shrink:0}
+.ab input{flex:1;min-width:160px;padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:11px;outline:none;font-family:monospace}
+.ab input:focus{border-color:var(--accent)}
+.ab select{padding:5px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:10px;outline:none}
+.ab button{padding:5px 14px;background:var(--accent);border:none;border-radius:5px;color:#0a0a0a;font-size:10px;font-weight:600;cursor:pointer}
+.ab button:hover{background:var(--gold)}.ab .st{font-size:9px;color:var(--text3)}
+
+/* AI聊天容器 */
+.acw{border:1px solid var(--border);border-radius:10px;margin-bottom:30px;overflow:hidden}
+.ct{display:flex;background:var(--bg3);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.ctb{flex:1;padding:8px;text-align:center;font-size:10px;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;min-width:60px}
+.ctb:hover,.ctb.act{color:var(--text);border-color:var(--accent);background:var(--bg2)}
+.ctp{display:none;padding:0}.ctp.act{display:block}
+.cms{height:260px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{display:flex;gap:6px;max-width:90%}.msg.ai{align-self:flex-start}.msg.us{align-self:flex-end;flex-direction:row-reverse}
+.msg .av{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.msg.ai .av{background:linear-gradient(135deg,var(--accent),var(--gold));color:#0a0a0a}
+.msg.us .av{background:var(--border);color:var(--text2)}
+.msg .bb{padding:7px 10px;border-radius:8px;font-size:11px;line-height:1.5;background:var(--bg3);color:var(--text2)}
+.msg.us .bb{background:var(--accent);color:#0a0a0a;font-size:11px}
+.typing span{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--text3);margin:0 1px;animation:ty 1.4s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes ty{0%,60%,100%{opacity:.3}30%{opacity:1}}
+.ciw{display:flex;gap:6px;padding:8px 12px;border-top:1px solid var(--border);background:var(--bg2);flex-wrap:wrap}
+.ciw input,.ciw textarea{flex:1;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:11px;outline:none;min-width:80px}
+.ciw input:focus,.ciw textarea:focus{border-color:var(--accent)}
+.ciw button{padding:6px 12px;background:linear-gradient(135deg,var(--accent),var(--gold));border:none;border-radius:5px;color:#0a0a0a;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap}
+.ciw select{padding:5px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:10px;outline:none}
+.ciw textarea{min-height:50px;resize:vertical;font-family:inherit}
+
+/* 灵感轮盘 */
+.ww{border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;margin-bottom:30px}
+.ww-spin{font-size:40px;margin-bottom:8px;transition:all .3s}
+.ww-spin.spin{animation:sw .6s ease-in-out}@keyframes sw{0%{transform:rotate(0)}25%{transform:rotate(90deg)}50%{transform:rotate(180deg)}75%{transform:rotate(270deg)}100%{transform:rotate(360deg)}}
+.ww-r{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:4px;min-height:28px}
+.ww-d{font-size:12px;color:var(--text2);margin-bottom:12px;min-height:18px}
+.ww-b{padding:7px 28px;background:linear-gradient(135deg,var(--accent),var(--gold));border:none;border-radius:6px;color:#0a0a0a;font-size:12px;font-weight:700;cursor:pointer}
+
+/* 工具卡片 */
+.tc{border:1px solid var(--border);border-radius:10px;padding:14px;transition:all .2s}
+.tc:hover{border-color:var(--accent);background:var(--bg2)}
+.tc h4{font-size:12px;color:var(--text);margin-bottom:2px}.tc .de{font-size:10px;color:var(--text2);margin-bottom:8px}
+.tc .in{display:flex;flex-direction:column;gap:5px}
+.tc .rw{display:flex;gap:5px;align-items:center}
+.tc .rw label{font-size:9px;color:var(--text2);min-width:36px;flex-shrink:0}
+.tc .rw input,.tc .rw select{flex:1;padding:4px 6px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:10px;outline:none}
+.tc button{margin-top:5px;padding:5px;width:100%;background:var(--accent);border:none;border-radius:5px;color:#0a0a0a;font-size:10px;font-weight:600;cursor:pointer}
+.tc button:hover{background:var(--gold)}
+.tc .rs{margin-top:6px;padding:6px 8px;background:rgba(0,212,255,.03);border:1px solid rgba(0,212,255,.06);border-radius:5px;font-size:10px;color:var(--text2);min-height:30px;white-space:pre-wrap;line-height:1.5}
+
+/* 快速操作面板 */
+.qp{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:24px}
+@media(max-width:800px){.qp{grid-template-columns:repeat(3,1fr)}}@media(max-width:400px){.qp{grid-template-columns:repeat(2,1fr)}}
+.qi{border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .2s}
+.qi:hover{border-color:var(--accent);background:var(--bg2)}
+.qi .qi-ic{font-size:22px;margin-bottom:4px}.qi .qi-lb{font-size:10px;color:var(--text2)}
+
+/* 待办 */
+.tl{display:flex;flex-direction:column;gap:5px}
+.ti{display:flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;color:var(--text2);cursor:pointer}
+.ti:hover{background:var(--bg3)}.ti .cb{width:12px;height:12px;border-radius:3px;border:1px solid var(--text3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:7px}
+.ti.done .cb{background:var(--green);border-color:var(--green);color:#0a0a0a}
+.ti.done{text-decoration:line-through;color:var(--text3);opacity:.6}
+.ti-add{display:flex;gap:5px;margin-top:6px}
+.ti-add input{flex:1;padding:4px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:10px;outline:none}
+.ti-add button{padding:4px 10px;background:var(--accent);border:none;border-radius:4px;color:#0a0a0a;font-size:10px;font-weight:600;cursor:pointer}
+
+/* 看板 */
+.kbh{display:grid;grid-template-columns:80px repeat(4,1fr);gap:3px;margin-bottom:4px;font-size:9px;color:var(--text3);text-align:center}
+.kbr{display:grid;grid-template-columns:80px repeat(4,1fr);gap:3px;margin-bottom:3px;font-size:10px}
+.kbr .kp{padding:4px 6px;background:var(--bg3);border-radius:4px;text-align:center;cursor:pointer;min-height:28px;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.kbr .kp.done{background:rgba(0,255,135,.08);color:var(--green)}
+.kbr .kp.doing{background:rgba(0,212,255,.08);color:var(--accent)}
+.kbr .kp.todo{color:var(--text3)}.kbr .kp.lb{background:transparent;color:var(--text);font-weight:600;justify-content:flex-start}
+
+/* 热点 */
+.htg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}@media(max-width:500px){.htg{grid-template-columns:repeat(2,1fr)}}
+.hti{border:1px solid var(--border);border-radius:6px;padding:8px;cursor:pointer;text-align:center}
+.hti:hover{border-color:var(--accent);background:var(--bg2)}
+.hti .hd{font-size:9px;color:var(--text3)}.hti .hn{font-size:11px;color:var(--text);font-weight:600;margin:2px 0}
+.hti .ht{font-size:8px;padding:1px 6px;border-radius:6px}
+.hti.cur{border-color:var(--gold);background:rgba(253,208,0,.04)}
+
+/* 素材网格 */
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}@media(max-width:500px){.mg{grid-template-columns:repeat(2,1fr)}}
+.mi{border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center;cursor:pointer;font-size:10px;color:var(--text2)}
+.mi:hover{border-color:var(--accent);background:var(--bg2)}
+.mi .mi-ic{font-size:22px;margin-bottom:2px}.mi .mi-tag{font-size:8px;color:var(--text3);margin-top:2px}
+
+/* 画廊 */
+.gl{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:30px}
+@media(max-width:900px){.gl{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.gl{grid-template-columns:1fr}}
+.gi{border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:all .3s;cursor:pointer}
+.gi:hover{border-color:var(--accent);transform:translateY(-3px)}
+.gi img{width:100%;height:auto;display:block}
+.gi .cp{padding:6px 10px;font-size:10px;color:var(--text2);background:var(--bg2)}
+.gi .cp strong{color:var(--text)}
+
+/* 关于 */
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:30px}@media(max-width:768px){.ag{grid-template-columns:1fr}}
+.ac{border:1px solid var(--border);border-radius:10px;padding:16px}
+.ac h4{font-size:13px;color:var(--text);margin-bottom:8px}
+.ac li{font-size:11px;color:var(--text2);padding:2px 0;list-style:none}
+.ac li::before{content:"→ ";color:var(--accent)}
+.tl{padding-left:16px;position:relative}
+.tl::before{content:'';position:absolute;left:4px;top:0;bottom:0;width:1.5px;background:var(--border)}
+.tli{position:relative;padding:0 0 14px 12px}
+.tli::before{content:'';position:absolute;left:-16px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.tli .dt{font-size:9px;color:var(--text3)}.tli p{font-size:11px;color:var(--text2)}
+
+/* 金句随机 */
+.jq-area{padding:16px;text-align:center;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.jq-text{font-size:14px;color:var(--accent);font-weight:600;margin-bottom:8px;min-height:40px}
+.jq-from{font-size:10px;color:var(--text3)}
+
+/* 底部 */
+.cta{text-align:center;padding:30px 20px;border-top:1px solid var(--border);margin-bottom:12px}
+.cta h3{font-size:16px;color:var(--text);margin-bottom:4px}
+.cta p{font-size:11px;color:var(--text2);margin-bottom:14px}
+.cta .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:6px;font-size:12px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--gold));color:#0a0a0a;text-decoration:none;cursor:pointer;border:none;transition:all .2s}
+.cta .btn:hover{transform:translateY(-2px);opacity:.9}
+.cta .sr{display:flex;justify-content:center;gap:8px;margin-top:10px}
+.cta .sb{padding:5px 12px;border:1px solid var(--border);border-radius:5px;font-size:10px;color:var(--text2);background:var(--bg3);cursor:pointer}
+.cta .sb:hover{border-color:var(--accent);color:var(--accent)}
+.ft{text-align:center;padding:14px;font-size:10px;color:var(--text3)}
+
+/* 浮动助手 */
+.ast{position:fixed;bottom:90px;right:20px;z-index:50;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 16px rgba(0,212,255,.2);animation:ab 3s ease-in-out infinite;cursor:pointer;transition:all .3s}
+.ast:hover{transform:scale(1.1)}
+.ast .ri{position:absolute;width:60px;height:60px;border-radius:50%;border:2px solid rgba(0,212,255,.12);animation:ap 3s ease-in-out infinite}
+@keyframes ab{0%,100%{box-shadow:0 4px 16px rgba(0,212,255,.2)}50%{box-shadow:0 4px 26px rgba(0,212,255,.35)}}
+@keyframes ap{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.2);opacity:.08}}
+.apn{position:fixed;bottom:152px;right:20px;z-index:49;width:280px;max-height:380px;overflow-y:auto;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;display:none;box-shadow:0 8px 36px rgba(0,0,0,.4)}
+.apn.op{display:block;animation:fu .3s}@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.apn h4{font-size:12px;color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between}
+.apn h4 .cl{color:var(--text3);cursor:pointer;font-size:13px}
+.asi{padding:6px 10px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px;transition:all .2s}
+.asi:hover{border-color:var(--accent);background:var(--bg3);color:var(--text)}
+.asi .ai-ic{font-size:14px}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);padding:7px 16px;background:var(--bg2);border:1px solid var(--accent);border-radius:6px;font-size:11px;color:var(--text);opacity:0;transition:all .3s;z-index:300;pointer-events:none}
+.toast.sh{opacity:1;transform:translateX(-50%) translateY(0)}
+#backTop{position:fixed;bottom:152px;right:20px;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-size:12px;display:none;align-items:center;justify-content:center;z-index:49}
+#backTop.sh{display:flex}#backTop:hover{border-color:var(--accent);color:var(--accent)}
+
+.hero-bg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.25;mask-image:linear-gradient(to right,#000 40%,transparent 100%)}
+@media(max-width:860px){.hero-bg img{opacity:.15}}
+</style></head><body>
+
+<canvas id="particles"></canvas>
+<div class="pbar" id="pBar"></div>
+
+<div class="nav">
+  <div class="ni">
+    <div class="nl" onclick="window.scrollTo({top:0,behavior:'smooth'})"><div class="lr">白</div><span>小白<span class="gld">AI</span>工坊</span></div>
+    <div class="nr">
+      <div class="nlk">
+        <a class="active" onclick="navTo('home')">首页</a><a onclick="navTo('ai')">AI中心</a><a onclick="navTo('tools')">工具箱</a><a onclick="navTo('team')">工作台</a><a onclick="navTo('about')">关于</a>
+      </div>
+      <button class="tt" onclick="tT()" id="tBtn">☀️</button>
+    </div>
+  </div>
+</div>
+
+<div id="home" class="hero"><div class="hero-bg"><img src="images/hero_main.jpg" alt=""></div>
+  <div class="hl">
+    <h1>一个建材人<br>折腾AI的真实记录</h1>
+    <p class="sub">不做理论家，只做实战派。把AI用在建材行业卖货、管团队、做内容。所有方案自己验证过。</p>
+    <div class="hero-tags">
+      <span>🔧 AI工具箱</span><span>🤖 AI对话</span><span>📝 笔记</span><span>🏭 方案</span><span>📊 工作台</span>
+    </div>
+    <div class="hst">
+      <div class="st"><div class="nm">8</div><div class="lb">篇笔记</div></div>
+      <div class="st"><div class="nm">20+</div><div class="lb">个AI工具</div></div>
+      <div class="st"><div class="nm">3</div><div class="lb">套方案</div></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- 快速入口 -->
+  <div class="grid4">
+    <div class="card" onclick="navTo('ai')"><div class="ic">🤖</div><h3>AI 对话</h3><p>聊天/文案/评分/分析</p><div class="pr"><div class="br" style="width:100%;background:var(--accent)"></div></div><div class="pl">随时可用</div></div>
+    <div class="card" onclick="spinBtn.click()"><div class="ic">🎰</div><h3>灵感轮盘</h3><p>一键随机选题组合</p><div class="pr"><div class="br" style="width:100%;background:var(--gold)"></div></div><div class="pl">没灵感就点</div></div>
+    <div class="card" onclick="navTo('team')"><div class="ic">📅</div><h3>团队工作台</h3><p>排期/待办/素材/热点</p><div class="pr"><div class="br" style="width:80%;background:var(--green)"></div></div><div class="pl">全员接入</div></div>
+    <div class="card" onclick="navTo('tools')"><div class="ic">🔧</div><h3>工具箱</h3><p>计算/报价/配色/话术</p><div class="pr"><div class="br" style="width:70%;background:var(--pink)"></div></div><div class="pl">实用工具</div></div>
+  </div>
+
+  <!-- API Key -->
+  <div class="ab" id="apiBar">
+    <span class="lbl">🔑 AI</span>
+    <select id="apiProv"><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option></select>
+    <input type="password" id="apiKey" placeholder="输入你的API Key" value="">
+    <button onclick="saveKey()">保存</button>
+    <span class="st" id="apiSt">⚪ 未配置</span>
+  </div>
+
+  <!-- ===== AI中心 ===== -->
+  <div class="st" id="ai">🤖 AI 中心 <span>对话 · 文案 · 评分 · 话术 · 标题 · 竞品 · 翻译 · 回复</span></div>
+  
+  <div class="acw">
+    <div class="ct">
+      <div class="ctb act" onclick="swChat('chat')">💬对话</div>
+      <div class="ctb" onclick="swChat('copy')">✍️文案</div>
+      <div class="ctb" onclick="swChat('title')">📰标题</div>
+      <div class="ctb" onclick="swChat('talk')">🗣️话术</div>
+      <div class="ctb" onclick="swChat('reply')">💬回复</div>
+      <div class="ctb" onclick="swChat('comp')">🔍竞品</div>
+      <div class="ctb" onclick="swChat('img')">🖼️识图</div>
+      <div class="ctb" onclick="swChat('score')">🏆评分</div>
+    </div>
+
+    <div class="ctp act" id="pane-chat">
+      <div class="cms" id="chatMsgs"><div class="msg ai"><div class="av">白</div><div class="bb">万能AI助手，随便问：<br>• 建材专业问题<br>• 销售话术优化<br>• 内容创作灵感<br>• AI工具怎么用</div></div></div>
+      <div class="ciw"><input type="text" id="chatIn" placeholder="输入问题..." onkeydown="if(event.key==='Enter')sdChat()"><button onclick="sdChat()">发送</button></div>
+    </div>
+
+    <div class="ctp" id="pane-copy">
+      <div class="cms" id="copyMsgs"><div class="msg ai"><div class="av">白</div><div class="bb">选类型→填主题→AI生成。还能一次出6版。</div></div></div>
+      <div class="ciw"><select id="cpType"><option value="xh">小红书种草</option><option value="dy">抖音脚本</option><option value="pyq">朋友圈</option><option value="cp">产品卖点</option><option value="bz">报价方案</option><option value="all">全部6版</option></select><input type="text" id="cpIn" placeholder="产品/主题..." style="flex:2"><button onclick="genCp()">生成</button></div>
+    </div>
+
+    <div class="ctp" id="pane-title">
+      <div class="cms" id="titleMsgs"><div class="msg ai"><div class="av">白</div><div class="bb">输入主题，AI给你出10个爆款标题+推荐理由。</div></div></div>
+      <div class="ciw"><input type="text" id="titleIn" placeholder="内容主题..." style="flex:2"><button onclick="genTitle()">出标题</button></div>
+    </div>
+
+    <div class="ctp" id="pane-talk">
+      <div class="cms" id="talkMsgs"><div class="msg ai"><div class="av">白</div><div class="bb">输入客户情况，AI帮你生成应对话术。</div></div></div>
+      <div class="ciw"><input type="text" id="talkIn" placeholder="比如：客户嫌贵、竞品更低..." style="flex:2"><button onclick="genTalk()">出话术</button></div>
+    </div>
+
+    <div class="ctp" id="pane-reply">
+      <div class="cms" id="replyMsgs"><div class="msg ai"><div class="av">白</div><div class="bb">粘贴客户评论/问题，AI自动生成回复。</div></div></div>
+      <div class="ciw"><textarea id="replyIn" style="flex:2;min-height:40px" placeholder="客户评论/问题..."></textarea><button onclick="genReply()">生成回复</button></div>
+    </div>
+
+    <div class="ctp" id="pane-comp">
+      <div class="cms" id="compMsgs"><div class="msg ai"><div class="av">白</div><div class="bb">输入竞品信息，AI做专业分析+对策建议。</div></div></div>
+      <div class="ciw"><textarea id="compIn" style="flex:2;min-height:40px" placeholder="竞品名称/特点/价格/渠道..."></textarea><button onclick="genComp()">分析</button></div>
+    </div>
+
+    <div class="ctp" id="pane-img">
+      <div class="cms" id="imgMsgs"><div class="msg ai"><div class="av">白</div><div class="bb">上传建材/施工/产品照片，AI分析。需OpenAI Key。</div></div></div>
+      <div class="ciw"><input type="file" id="imgIn" accept="image/*" style="flex:1;font-size:11px;color:var(--text2)"><button onclick="anImg()">分析</button></div>
+    </div>
+
+    <div class="ctp" id="pane-score">
+      <div class="cms" id="scoreMsgs"><div class="msg ai"><div class="av">白</div><div class="bb">粘贴文案，AI打分+优化建议。</div></div></div>
+      <div class="ciw"><textarea id="scoreIn" style="flex:2;min-height:50px" placeholder="粘贴文案..."></textarea><button onclick="anScore()">评分</button></div>
+    </div>
+  </div>
+
+  <!-- ===== 灵感轮盘 ===== -->
+  <div class="st">🎰 灵感轮盘 <span>没灵感？点一下出选题</span></div>
+  <div class="ww">
+    <div class="ww-spin" id="wwSpin">🎯</div>
+    <div class="ww-r" id="wwR">点我生成选题</div>
+    <div class="ww-d" id="wwD">产品 × 平台 × 形式 × 情绪</div>
+    <button class="ww-b" id="spinBtn" onclick="spinW()">🎰 转一下</button>
+  </div>
+
+  <!-- ===== 快速操作面板 ===== -->
+  <div class="st">⚡ 快速操作 <span>点一下就用</span></div>
+  <div class="qp">
+    <div class="qi" onclick="t('📋 链接已复制')"><div class="qi-ic">📋</div><div class="qi-lb">复制链接</div></div>
+    <div class="qi" onclick="t('🗑️ 已清空缓存')"><div class="qi-ic">🗑️</div><div class="qi-lb">清空缓存</div></div>
+    <div class="qi" onclick="jqGen()"><div class="qi-ic">💬</div><div class="qi-lb">随机金句</div></div>
+    <div class="qi" onclick="swChat('title');navTo('ai')"><div class="qi-ic">📰</div><div class="qi-lb">标题生成</div></div>
+    <div class="qi" onclick="swChat('talk');navTo('ai')"><div class="qi-ic">🗣️</div><div class="qi-lb">销售话术</div></div>
+    <div class="qi" onclick="swChat('reply');navTo('ai')"><div class="qi-ic">💬</div><div class="qi-lb">评论回复</div></div>
+  </div>
+
+  <!-- ===== 随机金句 ===== -->
+  <div class="card" style="margin-bottom:24px;cursor:pointer" onclick="jqGen()">
+    <div class="jq-area">
+      <div class="jq-text" id="jqTxt">点击生成建材行业金句</div>
+      <div class="jq-from" id="jqFrom">点我刷新</div>
+    </div>
+  </div>
+
+  <!-- ===== 工具箱 ===== -->
+  <div class="st" id="tools">🔧 AI工具箱 <span>建材人专用 · 即开即用</span></div>
+  <div class="grid3">
+    <div class="tc"><h4>📏 美缝计用量 <span class="aib">工具</span></h4><div class="de">秒算需要几支</div>
+      <div class="in">
+        <div class="rw"><label>长</label><input type="number" id="tL" value="80"><span style="font-size:9px;color:var(--text3)">cm</span></div>
+        <div class="rw"><label>宽</label><input type="number" id="tW" value="80"><span style="font-size:9px;color:var(--text3)">cm</span></div>
+        <div class="rw"><label>缝</label><input type="number" id="tG" value="2"><span style="font-size:9px;color:var(--text3)">mm</span></div>
+        <div class="rw"><label>面积</label><input type="number" id="tA" value="100"><span style="font-size:9px;color:var(--text3)">m²</span></div>
+      </div>
+      <button onclick="calcM()">计算</button><div class="rs" id="mR">输入后点计算</div>
+    </div>
+    <div class="tc"><h4>📄 施工报价 <span class="aib">AI</span></h4><div class="de">自动出专业报价</div>
+      <div class="in">
+        <div class="rw"><label>面积</label><input type="number" id="qA" value="200"></div>
+        <div class="rw"><label>等级</label><select id="qG"><option value="1.0">标准</option><option value="1.3">中档</option><option value="1.6">高端</option></select></div>
+        <div class="rw"><label>难度</label><select id="qD"><option value="1.0">常规</option><option value="1.2">复杂</option><option value="1.5">非常</option></select></div>
+      </div>
+      <button onclick="calcQ()">生成</button><div class="rs" id="qR">输入后生成</div>
+    </div>
+    <div class="tc"><h4>🎨 色卡搭配 <span class="aib">AI</span></h4><div class="de">AI推荐最佳配色</div>
+      <div class="in">
+        <div class="rw"><label>地面色</label><input type="color" id="fC" value="#d4c5a9"></div>
+        <div style="display:flex;gap:2px;flex-wrap:wrap;margin:2px 0">
+          <button class="fb act" onclick="pkS('现代',this)" style="font-size:9px;padding:2px 8px">现代</button>
+          <button class="fb" onclick="pkS('北欧',this)" style="font-size:9px;padding:2px 8px">北欧</button>
+          <button class="fb" onclick="pkS('中式',this)" style="font-size:9px;padding:2px 8px">中式</button>
+          <button class="fb" onclick="pkS('工业',this)" style="font-size:9px;padding:2px 8px">工业</button>
+        </div>
+      </div>
+      <button onclick="calcC()">推荐</button><div class="rs" id="cR">选择后点推荐</div>
+    </div>
+  </div>
+
+  
+  <!-- ===== AI教学区 ===== -->
+  <div class="st" id="ai-edu">🧠 AI 实战教学 <span>从入门到会用 · 建材人专属</span></div>
+  
+  <div class="grid3">
+    <div class="card"><div class="ic">🤖</div><h3>ChatGPT 建材实战 <span class="aib">教程</span></h3><p>销售话术优化、客户分析、报价方案、竞品调研，一步一步教你用。</p><div class="pr"><div class="br" style="width:100%;background:var(--accent)"></div></div><div class="pl">适合零基础</div></div>
+    <div class="card"><div class="ic">📝</div><h3>提示词模板库 <span class="aib">直接复制</span></h3><p>建材销售话术、小红书种草文案、抖音脚本、朋友圈营销、报价方案。</p><div class="pr"><div class="br" style="width:100%;background:var(--gold)"></div></div><div class="pl">即用即走</div></div>
+    <div class="card"><div class="ic">🎯</div><h3>AI工具实测 <span class="aib">评测</span></h3><p>DeepSeek vs Kimi vs Claude，建材行业真实场景下谁更好用？</p><div class="pr"><div class="br" style="width:100%;background:var(--green)"></div></div><div class="pl">持续更新</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card" style="cursor:default"><h4 style="font-size:12px;margin-bottom:8px;color:var(--text)">📖 AI学习路线图</h4>
+      <div style="font-size:11px;color:var(--text2);line-height:1.8">
+      <div>① <b style="color:var(--accent)">认识AI</b> — 了解ChatGPT/Claude/Kimi能做什么（10分钟）</div>
+      <div>② <b style="color:var(--gold)">会用AI</b> — 学会提问、学会判断AI的回答（30分钟）</div>
+      <div>③ <b style="color:var(--green)">用好AI</b> — 回到业务里，找到3个最能提效的场景（2小时）</div>
+      <div>④ <b style="color:var(--pink)">AI+业务</b> — 搭建自己的AI工作流，让AI帮你干活（持续）</div>
+      </div>
+    </div>
+    <div class="card" style="cursor:default"><h4 style="font-size:12px;margin-bottom:8px;color:var(--text)">💡 今日AI小技巧</h4>
+      <div id="aiTip" style="font-size:11px;color:var(--text2);line-height:1.6">让AI帮你写客户跟进邮件：告诉他客户背景+你的目标，他会帮你写3个版本。</div>
+    </div>
+  </div>
+
+  <!-- ===== 团队工作台 ===== -->
+  <div class="st" id="team">👥 团队工作台 <span>排期 · 待办 · 素材 · 热点 · 统计</span></div>
+  
+  <div class="grid2">
+    <div class="card"><h4 style="font-size:12px;color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between">📋 今日待办 <span style="font-size:9px;color:var(--text3)">点选框完成</span></h4>
+      <div class="tl" id="todoList"></div>
+      <div class="ti-add"><input type="text" id="todoIn" placeholder="新待办..."><button onclick="addTD()">添加</button></div>
+    </div>
+    <div class="card"><h4 style="font-size:12px;color:var(--text);margin-bottom:8px">📊 团队产出 <span style="font-size:9px;color:var(--text3)">本周统计</span></h4>
+      <div style="font-size:10px;color:var(--text2);line-height:1.8">
+        <div>剪辑组: <b style="color:var(--accent)">3</b> 条 · 拍摄 <b style="color:var(--gold)">2</b> 组</div>
+        <div>文案组: <b style="color:var(--accent)">4</b> 条 · 策划 <b style="color:var(--gold)">2</b> 篇</div>
+        <div>设计组: <b style="color:var(--accent)">2</b> 套 · 排版 <b style="color:var(--gold)">1</b> 篇</div>
+        <div>AI组: <b style="color:var(--accent)">3</b> 个 · 调优 <b style="color:var(--gold)">2</b> 次</div>
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">✅ 目标完成: <b style="color:var(--green)">72%</b> · 剩余 <b style="color:var(--gold)">4</b> 项</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card" style="overflow:visible"><h4 style="font-size:12px;margin-bottom:8px;display:flex;justify-content:space-between">📅 内容排期 <span style="font-size:9px;color:var(--text3)">点按切换状态</span></h4>
+      <div class="kbh"><span></span><span>剪辑组</span><span>文案组</span><span>设计组</span><span>AI组</span></div>
+      <div id="kbBody"></div>
+      <div style="margin-top:6px;text-align:center"><button onclick="resetKB()" style="padding:2px 8px;border:1px solid var(--border);border-radius:3px;font-size:9px;color:var(--text2);background:transparent;cursor:pointer">重置</button></div>
+    </div>
+    <div class="card"><h4 style="font-size:12px;margin-bottom:8px">🔥 热点日历 <span style="font-size:9px;color:var(--text3)">本月节点</span></h4>
+      <div class="htg" id="hotGrid"></div>
+      <div style="margin-top:6px;text-align:center"><button onclick="genHI()" style="padding:4px 12px;background:linear-gradient(135deg,var(--accent),var(--gold));border:none;border-radius:4px;color:#0a0a0a;font-size:10px;font-weight:600;cursor:pointer">🎯 AI选题</button>
+      <div id="hotIdea" style="font-size:10px;color:var(--text2);margin-top:4px"></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:28px"><h4 style="font-size:12px;margin-bottom:8px">🗂️ 共享素材库 <span style="font-size:9px;color:var(--text3)">点击复制</span></h4>
+    <div class="mg" id="mediaGrid"></div>
+  </div>
+
+  <!-- ===== IP画廊 ===== -->
+  <div class="st">🎭 小白IP <span>四个姿态 · 一种气质</span></div>
+  <div class="gl">
+    <div class="gi"><img src="images/xiaobai_正面.jpg"><div class="cp"><strong>正面</strong> · 沉稳开场</div></div>
+    <div class="gi"><img src="images/xiaobai_引导.jpg"><div class="cp"><strong>引导</strong> · 数据流指引</div></div>
+    <div class="gi"><img src="images/xiaobai_侧脸.jpg"><div class="cp"><strong>侧脸</strong> · 亲和微笑</div></div>
+    <div class="gi"><img src="images/xiaobai_回眸.jpg"><div class="cp"><strong>回眸</strong> · 邀约探索</div></div>
+  </div>
+
+  <!-- ===== 关于 ===== -->
+  <div class="st" id="about">👤 关于我</div>
+  <div class="ag">
+    <div class="ac"><h4>📋 我是谁</h4><li>13年美缝行业人，地老板销售+品宣</li><li>管品宣团队（剪辑/文案/设计/AI）</li><li>「老秦的AI笔记」主理人</li><li>正在做：建材行业AI基础设施</li></div>
+    <div class="ac"><h4>🎯 在做什么</h4><li>把AI落地到建材销售全流程</li><li>用AI帮团队提效10倍</li><li>验证可行后输出为行业方案</li><li>打造建材行业AI基础设施</li></div>
+    <div class="ac" style="grid-column:1/-1"><h4>📅 时间线</h4>
+      <div class="tl">
+        <div class="tli"><div class="dt">2026-07</div><p>小白AI网站上线 · 全渠道打通</p></div>
+        <div class="tli"><div class="dt">2026-06</div><p>AI销售仪表盘上线，用数据说话</p></div>
+        <div class="tli"><div class="dt">2026-05</div><p>内容自动化跑通，团队效率提升</p></div>
+        <div class="tli"><div class="dt">2026-03</div><p>内部试点AI销售自动化</p></div>
+        <div class="tli"><div class="dt">2025-12</div><p>开始折腾AI，从ChatGPT入门</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta">
+  <h3>💬 一起折腾AI？</h3>
+  <p>建材行业同频的朋友，加微信交流实战经验</p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="btn" onclick="t('📱 微信号已复制')">📱 添加微信</button>
+    <button class="btn" style="background:var(--border);color:var(--text)" onclick="shareS()">📤 分享</button>
+  </div>
+  <div class="sr"><span class="sb" onclick="shareLink()">📋 复制链接</span><span class="sb" onclick="t('💬 截图分享到微信')">💬 分享微信</span></div>
+</div>
+<div class="ft">◈ 小白AI工坊 · 一个建材人折腾AI的真实记录 · 每个工具结果底部都会出现"由 小白AI工坊 生成"</div>
+
+<!-- 浮动助手 -->
+<div class="ast" id="astBtn" onclick="toggleAst()"><div class="ri"></div>🤖</div>
+<div class="apn" id="astPanel">
+  <h4>🤖 小白快捷 <span class="cl" onclick="toggleAst()">✕</span></h4>
+  <div class="asi" onclick="navTo('ai');toggleAst()"><span class="ai-ic">💬</span> AI对话</div>
+  <div class="asi" onclick="spinBtn.click();toggleAst()"><span class="ai-ic">🎰</span> 灵感轮盘</div>
+  <div class="asi" onclick="jqGen();toggleAst()"><span class="ai-ic">💬</span> 随机金句</div>
+  <div class="asi" onclick="t('📱 微信号：qinzhihao')"><span class="ai-ic">📩</span> 联系我</div>
+  <div class="asi" onclick="shareS();toggleAst()"><span class="ai-ic">📤</span> 分享这个站</div>
+  <div class="asi" onclick="window.scrollTo({top:0,behavior:'smooth'});toggleAst()"><span class="ai-ic">⬆</span> 回到顶部</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+<script>
+// 粒子背景
+const c=document.getElementById('particles'),ctx=c.getContext('2d');let W,H,pts=[];
+function rs(){W=c.width=innerWidth;H=c.height=innerHeight}
+rs();window.addEventListener('resize',rs);
+for(let i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+0.3,dx:(Math.random()-0.5)*0.2,dy:(Math.random()-0.5)*0.2});
+function an(){ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>W)p.dx*=-1;if(p.y<0||p.y>H)p.dy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.28);ctx.fillStyle='rgba(0,212,255,0.08)';ctx.fill()});
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(0,212,255,${0.05*(1-d/120)})`;ctx.lineWidth=.4;ctx.stroke()}}
+  requestAnimationFrame(an)}an();
+
+function navTo(id){
+  document.querySelectorAll('.nlk a').forEach(a=>a.classList.remove('active'));
+  event.target.classList.add('active');
+  const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});else window.scrollTo({top:0,behavior:'smooth'})
+}
+
+// 主题
+let isDark=localStorage.getItem('xbT')!=='light';
+function tT(){isDark=!isDark;document.body.classList.toggle('light');document.getElementById('tBtn').textContent=isDark?'☀️':'🌙';localStorage.setItem('xbT',isDark?'dark':'light')}
+if(localStorage.getItem('xbT')==='light'){document.body.classList.add('light');document.getElementById('tBtn').textContent='🌙'}
+
+// API
+const sk=localStorage.getItem('xbAk')||'',sp=localStorage.getItem('xbAp')||'deepseek';
+if(sk){document.getElementById('apiKey').value=sk;document.getElementById('apiSt').textContent='🟢 已配置'}
+document.getElementById('apiProv').value=sp;
+function saveKey(){
+  const k=document.getElementById('apiKey').value,p=document.getElementById('apiProv').value;
+  if(k){localStorage.setItem('xbAk',k);localStorage.setItem('xbAp',p);document.getElementById('apiSt').textContent='🟢 已配置';t('🔑 已保存')}
+  else t('⚠️ 输入API Key');
+}
+function gC(){const k=localStorage.getItem('xbAk'),p=localStorage.getItem('xbAp')||'deepseek';if(!k)return null;
+  const u={deepseek:'https://api.deepseek.com/v1/chat/completions',openai:'https://api.openai.com/v1/chat/completions'},m={deepseek:'deepseek-chat',openai:'gpt-4o-mini'};
+  return{key:k,url:u[p]||u.deepseek,model:m[p]||m.deepseek}}
+async function callAI(ms,onC){
+  const c=gC();if(!c){t('⚠️ 先配置API Key');return}
+  try{
+    const r=await fetch(c.url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${c.key}`},body:JSON.stringify({model:c.model,messages:ms,stream:true})});
+    if(!r.ok){t(`❌ API ${r.status}`);return}
+    const rd=r.body.getReader(),dd=new TextDecoder();let txt='';
+    while(true){const{done,value}=await rd.read();if(done)break;
+      dd.decode(value).split('\n').filter(l=>l.trim()&&l.startsWith('data:')).forEach(l=>{try{const d=JSON.parse(l.slice(5));if(d.choices&&d.choices[0]?.delta?.content){txt+=d.choices[0].delta.content;if(onC)onC(txt)}}catch{})}
+    }return txt
+  }catch(e){t(`❌ ${e.message}`);return null}
+}
+
+function addMsg(r,t,ci){const c=document.getElementById(ci||'chatMsgs');c.innerHTML+=`<div class="msg ${r==='ai'?'ai':'us'}"><div class="av">${r==='ai'?'白':'你'}</div><div class="bb">${t}</div></div>`;c.scrollTop=c.scrollHeight}
+function addTp(ci){const c=document.getElementById(ci||'chatMsgs');c.innerHTML+=`<div class="msg ai" id="_tp"><div class="av">白</div><div class="bb"><span class="typing"><span></span><span></span><span></span></span></div></div>`;c.scrollTop=c.scrollHeight}
+function rmTp(){const e=document.getElementById('_tp');e&&e.remove()}
+function swChat(t){document.querySelectorAll('.ctb').forEach(b=>b.classList.remove('act'));document.querySelectorAll('.ctp').forEach(p=>p.classList.remove('act'));event.target.classList.add('act');document.getElementById('pane-'+t).classList.add('act')}
+
+async function sdChat(){const i=document.getElementById('chatIn'),t=i.value.trim();if(!t)return;i.value='';addMsg('us',t);addTp('chatMsgs');await callAI([{role:'system',content:'你是小白AI助手，建材行业AI实践者。回答简洁实用。'},{role:'user',content:t}],ft=>{rmTp();addMsg('ai',ft.replace(/\n/g,'<br>'),'chatMsgs')})}
+async function genCp(){
+  const tp=document.getElementById('cpType').value,inp=document.getElementById('cpIn').value.trim();if(!inp){t('⚠️ 输入主题');return}
+  const pm={xh:'写小红书种草笔记',dy:'写15秒抖音脚本',pyq:'写朋友圈文案',cp:'写产品卖点文案',bz:'写报价方案简介',all:'同时生成6个版本：小红书、抖音、朋友圈、产品卖点、报价方案'};
+  addMsg('us',`${pm[tp]}：${inp}`,'copyMsgs');addTp('copyMsgs');
+  await callAI([{role:'system',content:'建材AI文案专家'},{role:'user',content:`${pm[tp]}。主题：${inp}。要求：口语化、建材行业`}],ft=>{rmTp();addMsg('ai',ft.replace(/\n/g,'<br>'),'copyMsgs')});
+}
+async function genTitle(){const inp=document.getElementById('titleIn').value.trim();if(!inp){t('⚠️ 输入主题');return}
+  addMsg('us',`📰 标题生成：${inp}`,'titleMsgs');addTp('titleMsgs');
+  await callAI([{role:'user',content:`为以下主题生成10个爆款标题（小红书/抖音风格），每个标题用一行，附推荐理由：${inp}`}],ft=>{rmTp();addMsg('ai',ft.replace(/\n/g,'<br>'),'titleMsgs')});
+}
+async function genTalk(){const inp=document.getElementById('talkIn').value.trim();if(!inp){t('⚠️ 输入客户情况');return}
+  addMsg('us',`🗣️ 情况：${inp}`,'talkMsgs');addTp('talkMsgs');
+  await callAI([{role:'system',content:'你是建材行业金牌销售，有13年实战经验。'},{role:'user',content:`客户遇到以下情况，请给出3种不同风格的应对话术：${inp}`}],ft=>{rmTp();addMsg('ai',ft.replace(/\n/g,'<br>'),'talkMsgs')});
+}
+async function genReply(){const inp=document.getElementById('replyIn').value.trim();if(!inp){t('⚠️ 粘贴评论');return}
+  addMsg('us',`💬 客户评论：${inp}`,'replyMsgs');addTp('replyMsgs');
+  await callAI([{role:'system',content:'你是建材品牌的客服/运营专家，回复专业有温度。'},{role:'user',content:`请为以下客户评论/问题生成2-3条回复选项：${inp}`}],ft=>{rmTp();addMsg('ai',ft.replace(/\n/g,'<br>'),'replyMsgs')});
+}
+async function genComp(){const inp=document.getElementById('compIn').value.trim();if(!inp){t('⚠️ 输入竞品');return}
+  addMsg('us',`🔍 竞品：${inp}`,'compMsgs');addTp('compMsgs');
+  await callAI([{role:'system',content:'你是建材行业战略分析师，输出SWOT分析和对策建议。'},{role:'user',content:`分析以下竞品信息，给出优势、劣势、机会、威胁及对策：${inp}`}],ft=>{rmTp();addMsg('ai',ft.replace(/\n/g,'<br>'),'compMsgs')});
+}
+async function anImg(){const f=document.getElementById('imgIn').files[0];if(!f){t('⚠️ 选图片');return}
+  addMsg('us','🖼️ 分析中...','imgMsgs');addTp('imgMsgs');
+  const b64=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(',')[1]);fr.readAsDataURL(f)});
+  const c=gC();if(!c){rmTp();t('⚠️ 先配Key');return}
+  try{
+    const r=await fetch(c.url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${c.key}`},body:JSON.stringify({model:c.model,messages:[{role:'user',content:[{type:'text',text:'分析这张建材/施工图：1.内容是什么 2.专业角度评价 3.改进建议'},{type:'image_url',image_url:{url:`data:image/jpeg;base64,${b64}`}}]}]})});
+    if(!r.ok){t(`❌ ${r.status}`);rmTp();return}
+    const d=await r.json(),txt=d.choices?.[0]?.message?.content||'无法分析';rmTp();addMsg('ai',txt.replace(/\n/g,'<br>'),'imgMsgs')
+  }catch(e){t(`❌ ${e.message}`);rmTp()}
+}
+async function anScore(){const txt=document.getElementById('scoreIn').value.trim();if(!txt){t('⚠️ 粘贴文案');return}
+  addMsg('us','📝 评分中...','scoreMsgs');addTp('scoreMsgs');
+  const r=await callAI([{role:'system',content:'内容分析专家。返回JSON：{"score":0-100,"level":"S/A/B/C","strength":"优点","weakness":"不足","tips":"建议"}'},{role:'user',content:`评分内容：${txt}`}]);
+  rmTp();if(r){try{const d=JSON.parse(r),co=d.score>=90?'var(--green)':d.score>=75?'var(--accent)':d.score>=60?'var(--gold)':'#ff4d4f';addMsg('ai',`<b style="font-size:22px;color:${co}">${d.score}分</b> ${d.level}级<br><br>✅ ${d.strength||'—'}<br>⚠️ ${d.weakness||'—'}<br>💡 ${d.tips||'—'}`,'scoreMsgs')}catch{addMsg('ai',r.replace(/\n/g,'<br>'),'scoreMsgs')}}
+}
+
+// 灵感轮盘
+const products=['环氧彩砂','碳环','美缝剂','水性环氧','聚脲','美容胶'],platforms=['小红书','抖音','公众号','朋友圈','视频号','知乎'],forms=['施工对比','知识科普','避坑指南','开箱测评','客户见证','行业解读','价格揭秘','场景展示'],moods=['反差感','共鸣感','专业感','亲切感','紧迫感','高级感'];
+function spinW(){const el=document.getElementById('wwSpin');el.classList.remove('spin');void el.offsetWidth;el.classList.add('spin');const p=products[Math.floor(Math.random()*products.length)],pl=platforms[Math.floor(Math.random()*platforms.length)],f=forms[Math.floor(Math.random()*forms.length)],m=moods[Math.floor(Math.random()*moods.length)];setTimeout(()=>{document.getElementById('wwR').textContent=`${p} × ${pl} × ${f}`;document.getElementById('wwD').textContent=`情绪：${m} · 适合内容团队执行`},600)}
+
+// 今日待办
+let todos=JSON.parse(localStorage.getItem('xbTD')||'["完成本周排期","整理素材库","试用AI工具","汇总周报"]');
+function rTD(){document.getElementById('todoList').innerHTML=todos.map((t,i)=>`<div class="ti${t[0]==='✓'?' done':''}" onclick="tog(${i})"><div class="cb">${t[0]==='✓'?'✓':''}</div>${t.replace('✓ ','')}</div>`).join('')}
+function tog(i){todos[i]=todos[i].startsWith('✓')?todos[i].replace('✓ ',' '):'✓ '+todos[i];localStorage.setItem('xbTD',JSON.stringify(todos));rTD()}
+function addTD(){const i=document.getElementById('todoIn'),v=i.value.trim();if(!v)return;todos.push(v);localStorage.setItem('xbTD',JSON.stringify(todos));i.value='';rTD()}
+rTD();
+
+// 看板
+let kb=JSON.parse(localStorage.getItem('xbKB')||'null')||[{t:'内容创作',s:['done','done','todo','']},{t:'视频制作',s:['doing','todo','','']},{t:'包装设计',s:['','','doing','']},{t:'AI调优',s:['','','','doing']},{t:'素材整理',s:['done','doing','','todo']}];
+function rKB(){document.getElementById('kbBody').innerHTML=kb.map(r=>`<div class="kbr"><div class="kp lb">${r.t}</div>${r.s.map((s,j)=>`<div class="kp ${s||'todo'}" onclick="cKB(${kb.indexOf(r)},${j})">${s==='done'?'✅':s==='doing'?'🔵':s||'○'}</div>`).join('')}</div>`).join('');localStorage.setItem('xbKB',JSON.stringify(kb))}
+function cKB(i,j){const s=kb[i].s[j];kb[i].s[j]=s==='done'?'':s==='doing'?'done':s===''?'doing':'todo';rKB()}
+function resetKB(){kb=[{t:'内容创作',s:['done','done','todo','']},{t:'视频制作',s:['doing','todo','','']},{t:'包装设计',s:['','','doing','']},{t:'AI调优',s:['','','','doing']},{t:'素材整理',s:['done','doing','','todo']}];rKB();t('✅ 已重置')}
+rKB();
+
+// 热点日历
+const hots=[{d:'7月下',n:'装修旺季',t:'黄金期'},{d:'8月',n:'立秋装修',t:'趋势'},{d:'9月',n:'金九银十',t:'🔥'},{d:'10月',n:'国庆促销',t:'🔥'},{d:'11月',n:'双11大促',t:'🔥🔥'},{d:'12月',n:'年末冲刺',t:'收官'},{d:'1月',n:'春节赶工',t:'冲刺'},{d:'2月',n:'新年开工',t:'起跑'}];
+function rHot(){document.getElementById('hotGrid').innerHTML=hots.map((h,i)=>`<div class="hti${i===0?' cur':''}"><div class="hd">${h.d}</div><div class="hn">${h.n}</div><span class="ht" style="background:rgba(0,212,255,.1);color:var(--accent)">${h.t}</span></div>`).join('')}
+async function genHI(){document.getElementById('hotIdea').textContent='🤔 生成中...';const r=await callAI([{role:'user',content:'现在是7月下旬装修旺季，给一个美缝品牌的选题建议，一句话'}],null);if(r)document.getElementById('hotIdea').textContent='🎯 '+r.replace(/\n/g,'').slice(0,60);else{document.getElementById('hotIdea').textContent='🎯 装修旺季选题："装修避坑指南：美缝剂千万别踩这3个坑"'}}
+rHot();
+
+// 素材库
+const media=[{ic:'🖼️',n:'产品图',t:'12张'},{ic:'🔨',n:'施工图',t:'8张'},{ic:'🎨',n:'色卡图',t:'6张'},{ic:'📊',n:'数据截图',t:'4张'},{ic:'😊',n:'表情包',t:'16个'},{ic:'📱',n:'竞品截图',t:'9张'},{ic:'🎬',n:'视频素材',t:'5条'},{ic:'📝',n:'文案模板',t:'20篇'}];
+function rM(){document.getElementById('mediaGrid').innerHTML=media.map(m=>`<div class="mi" onclick="t('✅ 已复制 ${m.n}')"><div class="mi-ic">${m.ic}</div>${m.n}<div class="mi-tag">${m.t}</div></div>`).join('')}
+rM();
+
+// 金句
+const jqs=[{t:'做建材不折腾AI，就像拿着算盘进互联网时代。',f:'— 小白AI工坊'},{t:'客户半夜问价的时候，销售在睡觉，AI不会睡。',f:'— 老秦的AI笔记'},{t:'AI落地最难的不是技术门槛，是认知门槛。',f:'— 行业观察'},{t:'真正好的销售不是能喝多少酒，而是对客户有多了解。',f:'— 小白AI工坊'},{t:'内容不应该是"发的"，而应该是"养的"。',f:'— 品宣心得'},{t:'把简单的事情用AI做到极致，就是竞争力。',f:'— 实战总结'},{t:'不是AI替代了你，是会用AI的人替代了你。',f:'— 老秦的AI笔记'},{t:'最好的汇报不是PPT多好看，是数据会说话。',f:'— 销售管理'},{t:'一个idea用AI试一下的成本，约等于零。',f:'— 小白AI工坊'},{t:'建材+AI，这个组合听着怪，但跑起来真香。',f:'— 实战记录'}];
+function jqGen(){const j=jqs[Math.floor(Math.random()*jqs.length)];document.getElementById('jqTxt').textContent=`"${j.t}"`;document.getElementById('jqFrom').textContent=j.f}
+
+// 工具
+function calcM(){const L=+document.getElementById('tL').value||80,W=+document.getElementById('tW').value||80,g=+document.getElementById('tG').value||2,a=+document.getElementById('tA').value||100;const tiles=a/((L/100)*(W/100)),tg=tiles*((L+W)/100*2)*(g/1000)*0.005;document.getElementById('mR').innerHTML=`🛠️ <b>${Math.ceil(tg/0.4)} 支</b>（约${tg.toFixed(2)}m³）<br><span style="font-size:8px;color:var(--text3)">由 小白AI工坊 生成</span>`}
+function calcQ(){const s=+document.getElementById('qA').value||200,g=+document.getElementById('qG').value,d=+document.getElementById('qD').value,t=s*12*g*d;document.getElementById('qR').innerHTML=`💰 <b>¥${t.toFixed(0)}</b>（¥${(12*g*d).toFixed(1)}/m²）<br><span style="font-size:8px;color:var(--text3)">由 小白AI工坊 生成</span>`}
+let cs='现代';function pkS(s,el){cs=s;el.parentElement.querySelectorAll('.fb').forEach(b=>b.classList.remove('act'));el.classList.add('act')}
+function calcC(){const m={现代:['#2E2E2E 深灰','#404040 中灰','#FDD000 金色'],北欧:['#F5F5F5 白','#C0C0C0 银灰','#FDD000 浅金'],中式:['#8B4513 深木','#FDD000 暗金','#2E2E2E 黑'],工业:['#2E2E2E 深灰','#6E6E6E 中灰','#A0522D 铜色']};const r=m[cs]||m['现代'];document.getElementById('cR').innerHTML=r.map(c=>`<span style="display:inline-block;margin:2px;padding:2px 8px;background:var(--bg3);border-radius:4px;font-size:10px;color:var(--text2)">${c}</span>`).join('')+`<br><span style="font-size:8px;color:var(--text3)">由 小白AI工坊 推荐</span>`}
+
+// 浮动
+function toggleAst(){document.getElementById('astPanel').classList.toggle('op')}
+function shareS(){if(navigator.share)navigator.share({title:'小白AI工坊',text:'一个建材人折腾AI的真实记录',url:window.location.href}).catch(()=>{});else navigator.clipboard.writeText(window.location.href).then(()=>t('✅ 链接已复制'))}
+function shareLink(){navigator.clipboard.writeText(window.location.href).then(()=>t('✅ 链接已复制'))}
+function t(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('sh');setTimeout(()=>e.classList.remove('sh'),2800)}
+
+// 滚动
+window.addEventListener('scroll',()=>{const h=document.documentElement,p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;document.getElementById('pBar').style.width=p+'%';document.getElementById('backTop').classList.toggle('sh',h.scrollTop>350)});
+jqGen();</script></body></html>
