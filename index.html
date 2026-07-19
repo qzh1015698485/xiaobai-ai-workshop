@@ -1794,4 +1794,208 @@ document.addEventListener('mousemove',e=>{
     }
   });
 });
-</script></body></html>
+<!-- ===== 音乐播放器 ===== -->
+<style>
+/* 播放器容器 - 右下角浮动 */
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--gold));
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #0a0a0a;
+  box-shadow: 0 0 20px rgba(0,212,255,.2), 0 4px 15px rgba(0,0,0,.4);
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+}
+.music-player:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(0,212,255,.4), 0 6px 20px rgba(0,0,0,.5);
+}
+.music-player.pulse {
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100%{box-shadow:0 0 20px rgba(0,212,255,.2)}
+  50%{box-shadow:0 0 30px rgba(0,212,255,.5),0 0 60px rgba(0,212,255,.2)}
+}
+.music-panel {
+  position: fixed;
+  bottom: 78px;
+  right: 20px;
+  z-index: 998;
+  width: 280px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  display: none;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  backdrop-filter: blur(20px);
+}
+.music-panel.show { display: block; }
+.music-panel .track-name {
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.music-panel .progress {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  position: relative;
+}
+.music-panel .progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 2px;
+  width: 0%;
+  transition: width .1s;
+}
+.music-panel .controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.music-panel .controls button {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  transition: color .2s;
+}
+.music-panel .controls button:hover { color: var(--accent); }
+.music-panel .controls .pp-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--gold));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #0a0a0a;
+}
+.music-panel .volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.music-panel .volume-wrap input[type=range] {
+  width: 100%;
+  height: 3px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+.music-panel .volume-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+.music-panel .vol-icon { font-size: 11px; color: var(--text3); }
+</style>
+
+<button class="music-player pulse" id="musicBtn" onclick="toggleMusic()">🎵</button>
+
+<div class="music-panel" id="musicPanel">
+  <div class="track-name" id="trackName">🎵 小白AI · 赛博空间</div>
+  <div class="progress" onclick="seekMusic(event)">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="controls">
+    <button onclick="prevTrack()">⏮</button>
+    <button class="pp-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+    <button onclick="nextTrack()">⏭</button>
+  </div>
+  <div class="volume-wrap">
+    <span class="vol-icon">🔊</span>
+    <input type="range" id="volumeRange" min="0" max="1" step="0.05" value="0.3" oninput="changeVolume(this.value)">
+  </div>
+</div>
+
+<script>
+// 免费音乐列表（SoundHelix免费曲目，可替换）
+const tracks = [
+  { name: '🎵 小白AI · 数字脉冲', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+  { name: '🎵 小白AI · 数据流', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
+  { name: '🎵 小白AI · 神经网络', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+];
+let currentTrack = 0, isPlaying = false;
+const audio = new Audio();
+audio.volume = 0.3;
+
+function loadTrack(idx) {
+  currentTrack = idx % tracks.length;
+  audio.src = tracks[currentTrack].url;
+  document.getElementById('trackName').textContent = tracks[currentTrack].name;
+  if(isPlaying) audio.play();
+}
+
+function toggleMusic() {
+  const panel = document.getElementById('musicPanel');
+  panel.classList.toggle('show');
+}
+
+function togglePlay() {
+  if(!audio.src) loadTrack(0);
+  if(audio.paused) {
+    audio.play();
+    isPlaying = true;
+    document.getElementById('playPauseBtn').textContent = '⏸';
+    document.getElementById('musicBtn').classList.add('pulse');
+  } else {
+    audio.pause();
+    isPlaying = false;
+    document.getElementById('playPauseBtn').textContent = '▶';
+    document.getElementById('musicBtn').classList.remove('pulse');
+  }
+}
+
+function nextTrack() { loadTrack(currentTrack+1); if(!audio.paused) audio.play(); }
+function prevTrack() { loadTrack(currentTrack-1+tracks.length); if(!audio.paused) audio.play(); }
+
+function seekMusic(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+}
+
+function changeVolume(v) { audio.volume = v; }
+
+audio.addEventListener('timeupdate', () => {
+  if(audio.duration) {
+    const pct = (audio.currentTime / audio.duration * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+});
+
+audio.addEventListener('ended', nextTrack);
+
+loadTrack(0);
+</script>
+
+</body></html>
