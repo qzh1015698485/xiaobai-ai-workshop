@@ -445,6 +445,23 @@ body.parallax .hero{transform:perspective(1000px)}
 
 
 
+
+/* 弹窗 */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:rgba(5,5,8,.85);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}.modal-overlay.show{display:flex;opacity:1}
+.modal-box{max-width:560px;width:90%;max-height:80vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;transform:scale(.9);transition:transform .3s}
+.modal-overlay.show .modal-box{transform:scale(1)}
+.modal-box .close{position:absolute;top:14px;right:18px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2);transition:all .2s}
+.modal-box .close:hover{color:var(--text);border-color:var(--accent)}
+.modal-box h2{font-size:18px;margin-bottom:10px;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.modal-box p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;-webkit-text-fill-color:var(--text2)}
+.modal-box .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.modal-box .tags span{padding:2px 10px;border:1px solid var(--border);border-radius:10px;font-size:10px;color:var(--text2)}
+.modal-box .detail-img{width:100%;border-radius:12px;margin-bottom:14px}
+.modal-box .detail-list{list-style:none;padding:0}
+.modal-box .detail-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.modal-box .detail-list li:last-child{border:none}
+.modal-box .detail-list .label{background:var(--accent);color:#0a0a0a;font-size:9px;padding:1px 6px;border-radius:4px;font-weight:600;min-width:40px;text-align:center}
+
 </style></head><body>
 <!-- AI观察者之眼 -->
 <div id="aiEye">
@@ -482,7 +499,7 @@ body.parallax .hero{transform:perspective(1000px)}
     <div class="nl" onclick="window.scrollTo({top:0,behavior:'smooth'})"><div class="lr">白</div><span>小白<span class="gld">AI</span>工坊</span></div>
     <div class="nr">
       <div class="nlk">
-        <a class="active" onclick="navTo(this,'home')">首页</a><a onclick="navTo(this,'ai')">AI中心</a><a onclick="navTo(this,'tools')">工具箱</a><a onclick="navTo(this,'team')">工作台</a><a onclick="navTo(this,'about')">关于</a>
+        <a class="active" onclick="navTo(this,'home')">首页</a><a onclick="navTo(this,'ai')">AI中心</a><a onclick="navTo(this,'tools')">工具箱</a><a onclick="navTo(this,'team')">工作台</a><a onclick="openModal('about')">关于</a>
       </div>
       <button class="tt" onclick="tT()" id="tBtn">☀️</button>
     </div>
@@ -538,10 +555,10 @@ MODEL:XIAOBAI-3.0 // STATUS:ACTIVE // UPTIME:∞
 <div class="wrap">
   <!-- 快速入口 -->
   <div class="grid4">
-    <div class="card" onclick="navTo(this,'ai')" style="border-color:rgba(0,212,255,.25);background:linear-gradient(135deg,rgba(0,212,255,.04),var(--bg3))"><span class="mini-av"><span class="glow-ring"></span><span class="head"><span class="hair"></span><span class="eye l"></span><span class="eye r"></span><span class="smile"></span></span></span><h3>AI 对话</h3><p>聊天/文案/评分/分析</p><div class="pr"><div class="br" style="width:100%;background:linear-gradient(90deg,#00d4ff,#00ff87)"></div></div><div class="pl">随时可用</div></div>
-    <div class="card" onclick="spinBtn.click()" style="border-color:rgba(253,208,0,.2);background:linear-gradient(135deg,rgba(253,208,0,.04),var(--bg3))"><span class="mini-av"><span class="glow-ring"></span><span class="head"><span class="hair"></span><span class="eye l"></span><span class="eye r"></span><span class="smile"></span></span></span><h3>灵感轮盘</h3><p>一键随机选题组合</p><div class="pr"><div class="br" style="width:100%;background:linear-gradient(90deg,#FDD000,#ff64d4)"></div></div><div class="pl">没灵感就点</div></div>
-    <div class="card" onclick="navTo(this,'team')" style="border-color:rgba(0,255,135,.2);background:linear-gradient(135deg,rgba(0,255,135,.04),var(--bg3))"><span class="mini-av"><span class="glow-ring"></span><span class="head"><span class="hair"></span><span class="eye l"></span><span class="eye r"></span><span class="smile"></span></span></span><h3>团队工作台</h3><p>排期/待办/素材/热点</p><div class="pr"><div class="br" style="width:80%;background:linear-gradient(90deg,#00ff87,#00d4ff)"></div></div><div class="pl">全员接入</div></div>
-    <div class="card" onclick="navTo(this,'tools')" style="border-color:rgba(255,100,212,.2);background:linear-gradient(135deg,rgba(255,100,212,.04),var(--bg3))"><span class="mini-av"><span class="glow-ring"></span><span class="head"><span class="hair"></span><span class="eye l"></span><span class="eye r"></span><span class="smile"></span></span></span><h3>工具箱</h3><p>计算/报价/配色/话术</p><div class="pr"><div class="br" style="width:70%;background:linear-gradient(90deg,#ff64d4,#FDD000)"></div></div><div class="pl">实用工具</div></div>
+    <div class="card" onclick="openModal('ai')" style="border-color:rgba(0,212,255,.25);background:linear-gradient(135deg,rgba(0,212,255,.04),var(--bg3));cursor:pointer"><span class="mini-av"><span class="glow-ring"></span><span class="head"><span class="hair"></span><span class="eye l"></span><span class="eye r"></span><span class="smile"></span></span></span><h3>AI 中心</h3><p>聊天/文案/评分/分析</p><div class="pr"><div class="br" style="width:100%;background:linear-gradient(90deg,#00d4ff,#00ff87)"></div></div><div class="pl">随时可用</div></div>
+    <div class="card" onclick="openModal('spin')" style="border-color:rgba(253,208,0,.2);cursor:pointer;background:linear-gradient(135deg,rgba(253,208,0,.04),var(--bg3))"><span class="mini-av"><span class="glow-ring"></span><span class="head"><span class="hair"></span><span class="eye l"></span><span class="eye r"></span><span class="smile"></span></span></span><h3>灵感轮盘</h3><p>一键随机选题组合</p><div class="pr"><div class="br" style="width:100%;background:linear-gradient(90deg,#FDD000,#ff64d4)"></div></div><div class="pl">没灵感就点</div></div>
+    <div class="card" onclick="openModal('team')" style="border-color:rgba(0,255,135,.2);background:linear-gradient(135deg,rgba(0,255,135,.04),var(--bg3));cursor:pointer"><span class="mini-av"><span class="glow-ring"></span><span class="head"><span class="hair"></span><span class="eye l"></span><span class="eye r"></span><span class="smile"></span></span></span><h3>团队工作台</h3><p>排期/待办/素材/热点</p><div class="pr"><div class="br" style="width:80%;background:linear-gradient(90deg,#00ff87,#00d4ff)"></div></div><div class="pl">全员接入</div></div>
+    <div class="card" onclick="openModal('tools')" style="border-color:rgba(255,100,212,.2);background:linear-gradient(135deg,rgba(255,100,212,.04),var(--bg3));cursor:pointer"><span class="mini-av"><span class="glow-ring"></span><span class="head"><span class="hair"></span><span class="eye l"></span><span class="eye r"></span><span class="smile"></span></span></span><h3>AI实战案例</h3><p>计算/报价/配色/话术</p><div class="pr"><div class="br" style="width:70%;background:linear-gradient(90deg,#ff64d4,#FDD000)"></div></div><div class="pl">实用工具</div></div>
   </div>
 
   <!-- API Key -->
@@ -1439,6 +1456,23 @@ const codeSnippets = [
   cursor: pointer;
 }
 .music-panel .vol-icon { font-size: 11px; color: var(--text3); }
+
+/* 弹窗 */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:rgba(5,5,8,.85);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}.modal-overlay.show{display:flex;opacity:1}
+.modal-box{max-width:560px;width:90%;max-height:80vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;transform:scale(.9);transition:transform .3s}
+.modal-overlay.show .modal-box{transform:scale(1)}
+.modal-box .close{position:absolute;top:14px;right:18px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2);transition:all .2s}
+.modal-box .close:hover{color:var(--text);border-color:var(--accent)}
+.modal-box h2{font-size:18px;margin-bottom:10px;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.modal-box p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;-webkit-text-fill-color:var(--text2)}
+.modal-box .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.modal-box .tags span{padding:2px 10px;border:1px solid var(--border);border-radius:10px;font-size:10px;color:var(--text2)}
+.modal-box .detail-img{width:100%;border-radius:12px;margin-bottom:14px}
+.modal-box .detail-list{list-style:none;padding:0}
+.modal-box .detail-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.modal-box .detail-list li:last-child{border:none}
+.modal-box .detail-list .label{background:var(--accent);color:#0a0a0a;font-size:9px;padding:1px 6px;border-radius:4px;font-weight:600;min-width:40px;text-align:center}
+
 </style>
 
 <button class="music-player pulse" id="musicBtn" onclick="toggleMusic()">🎵</button>
@@ -1538,6 +1572,23 @@ loadTrack(0);
 .music-panel .controls .pp-btn { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; color: #0a0a0a; }
 .music-panel .volume-wrap { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
 .music-panel .volume-wrap input[type=range] { width: 100%; height: 3px; }
+
+/* 弹窗 */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:rgba(5,5,8,.85);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}.modal-overlay.show{display:flex;opacity:1}
+.modal-box{max-width:560px;width:90%;max-height:80vh;overflow-y:auto;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;transform:scale(.9);transition:transform .3s}
+.modal-overlay.show .modal-box{transform:scale(1)}
+.modal-box .close{position:absolute;top:14px;right:18px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2);transition:all .2s}
+.modal-box .close:hover{color:var(--text);border-color:var(--accent)}
+.modal-box h2{font-size:18px;margin-bottom:10px;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.modal-box p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;-webkit-text-fill-color:var(--text2)}
+.modal-box .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.modal-box .tags span{padding:2px 10px;border:1px solid var(--border);border-radius:10px;font-size:10px;color:var(--text2)}
+.modal-box .detail-img{width:100%;border-radius:12px;margin-bottom:14px}
+.modal-box .detail-list{list-style:none;padding:0}
+.modal-box .detail-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.modal-box .detail-list li:last-child{border:none}
+.modal-box .detail-list .label{background:var(--accent);color:#0a0a0a;font-size:9px;padding:1px 6px;border-radius:4px;font-weight:600;min-width:40px;text-align:center}
+
 </style>
 <button class="music-player pulse" id="musicBtn" onclick="toggleMusic()">🎵</button>
 <div class="music-panel" id="musicPanel">
@@ -1567,4 +1618,36 @@ function chV(v){au.volume=v;}
 au.addEventListener("timeupdate",()=>{if(au.duration)document.getElementById("progressBar").style.width=(au.currentTime/au.duration*100)+"%";});
 au.addEventListener("ended",nx);ld(0);
 </script>
+
+<!-- 弹窗 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal-box" id="modalBox" onclick="event.stopPropagation()">
+    <button class="close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const modalData = {
+  ai: {title:"AI 中心",img:"images/hero_main.jpg",tags:["对话","文案","评分","翻译"],desc:"AI对话、文案生成、内容评分、标题优化、话术生成、竞品分析、文章翻译、回复建议。所有AI功能一站集成。",list:["💬 AI对话：聊天沟通","📝 文案生成：一键出内容","🏆 评分器：AI打分优化","🎯 标题生成：爆款标题","📞 话术生成：销售话术","🔍 竞品分析：市场洞察"]},
+  tools: {title:"AI实战案例",tags:["真实落地","效果验证"],desc:"半年从0搭建AI系统的真实记录，每个案例都是实战结果。",list:["📊 销售仪表盘：30秒自动更新","💬 深夜成交：AI自动签单","🎬 内容3倍：团队从催稿变选稿","🤖 0代码搭建：半年自建AI系统"]},
+  team: {title:"团队工作台",tags:["排期","待办","素材","热点"],desc:"品宣团队一站式协作平台，排期、待办、素材库、热点日历全在这里。",list:["📅 内容排期：周视图管理","📋 今日待办：每人每天","🗂️ 共享素材库：全员访问","🔥 热点日历：营销节点","📊 团队产出：本周统计"]},
+  about: {title:"关于我",desc:"从建材销售到AI操盘手。13年建材行业老兵，零代码背景，2025年底开始自学AI，半年搭建完整AI系统。目标是让每个建材人都能用上AI。",list:["👤 秦志豪","🏢 地老板美缝剂 · 品宣负责人","🤖 小白AI系统创始人","🎯 建材行业AI实战派"]},
+  spin: {title:"🎰 灵感轮盘",desc:"一键随机选题组合，帮你突破创意瓶颈。",list:["🎯 随机选题：产品×平台×形式","💡 创意组合：两两搭配","🔥 热门方向：当前趋势","📌 收藏灵感：留存好创意"]}
+};
+
+function openModal(key, el) {
+  const data = modalData[key];
+  if(!data) return;
+  let html = "<h2>"+data.title+"</h2>"+(data.img?'<img src="'+data.img+'" class="detail-img">':'')+(data.tags?'<div class="tags">'+data.tags.map(t=>"<span>"+t+"</span>").join("")+'</div>':'')+"<p>"+data.desc+"</p>"+(data.list?'<ul class="detail-list">'+data.list.map(l=>'<li><span class="label">●</span> '+l+'</li>').join("")+'</ul>':'');
+  document.getElementById("modalContent").innerHTML = html;
+  document.getElementById("modalOverlay").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("show");
+  document.body.style.overflow = "";
+}
+</script>
+
 </body></html>
