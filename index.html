@@ -764,11 +764,18 @@ MODEL:XIAOBAI-3.0 // STATUS:ACTIVE // UPTIME:∞
 <div class="cta">
   <h3>💬 你是下一个？</h3>
   <p>如果你也是传统行业的，看到AI的机会但不知道从哪下手——<br>加他微信，看看一个建材销售是怎么用半年时间做到的</p>
-  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-    <button class="btn" onclick="t('📱 微信号已复制')">📱 添加微信</button>
-    <button class="btn" style="background:var(--border);color:var(--text)" onclick="shareS()">📤 分享</button>
+  <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;align-items:center">
+    <div style="text-align:center">
+      <img src="images/wechat_qr.jpg" style="width:140px;height:140px;border-radius:12px;border:1px solid var(--border);box-shadow:0 0 20px rgba(0,212,255,.1)">
+      <div style="font-size:10px;color:var(--text3);margin-top:6px">📱 扫码添加</div>
+    </div>
+    <div style="text-align:left">
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">秦先森</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px">👤 建材销售 → AI操盘手</div>
+      <button class="btn" onclick="navigator.clipboard.writeText('awei66888');t('✅ 微信号已复制')">📋 复制微信号</button>
+    </div>
   </div>
-  <div class="sr"><span class="sb" onclick="shareLink()">📋 复制链接</span><span class="sb" onclick="t('💬 截图分享到微信')">💬 分享微信</span></div>
+  <div class="sr" style="margin-top:12px"><span class="sb" onclick="shareLink()">📋 复制链接</span><span class="sb" onclick="shareS()">📤 分享给朋友</span></div>
 </div>
 <div class="ft">◈ 小白AI工坊 · 一个建材人折腾AI的真实记录 · 每个工具结果底部都会出现"由 小白AI工坊 生成"</div>
 
@@ -992,7 +999,7 @@ const codeSnippets = [
   setTimeout(flashCode, 5000 + Math.random()*8000);
 })();
 toggleAst()"><span class="ai-ic">💬</span> 随机金句</div>
-  <div class="asi" onclick="t('📱 微信号：wechat_id')"><span class="ai-ic">📩</span> 联系我</div>
+  <div class="asi" onclick="t('📱 微信号：awei66888')"><span class="ai-ic">📩</span> 联系我</div>
   <div class="asi" onclick="shareS();toggleAst()"><span class="ai-ic">📤</span> 分享这个站</div>
   <div class="asi" onclick="window.scrollTo({top:0,behavior:'smooth'});toggleAst()"><span class="ai-ic">⬆</span> 回到顶部</div>
 </div>
@@ -1637,7 +1644,7 @@ const modalData = {
   ai: {title:"AI 中心",img:"images/hero_main.jpg",tags:["对话","文案","评分","翻译"],desc:"AI对话、文案生成、内容评分、标题优化、话术生成、竞品分析、文章翻译、回复建议。所有AI功能一站集成。",list:["💬 AI对话：聊天沟通","📝 文案生成：一键出内容","🏆 评分器：AI打分优化","🎯 标题生成：爆款标题","📞 话术生成：销售话术","🔍 竞品分析：市场洞察"]},
   tools: {title:"AI实战案例",tags:["真实落地","效果验证"],desc:"半年从0搭建AI系统的真实记录，每个案例都是实战结果。",list:["📊 销售仪表盘：30秒自动更新","💬 深夜成交：AI自动签单","🎬 内容3倍：团队从催稿变选稿","🤖 0代码搭建：半年自建AI系统"]},
   team: {title:"团队工作台",tags:["排期","待办","素材","热点"],desc:"品宣团队一站式协作平台，排期、待办、素材库、热点日历全在这里。",list:["📅 内容排期：周视图管理","📋 今日待办：每人每天","🗂️ 共享素材库：全员访问","🔥 热点日历：营销节点","📊 团队产出：本周统计"]},
-  about: {title:"关于我",desc:"从建材销售到AI操盘手。13年建材行业老兵，零代码背景，2025年底开始自学AI，半年搭建完整AI系统。目标是让每个建材人都能用上AI。",list:["👤 秦志豪","🏢 地老板美缝剂 · 品宣负责人","🤖 小白AI系统创始人","🎯 建材行业AI实战派"]},
+  about: {title:"关于我",desc:"从建材销售到AI操盘手。13年建材行业老兵，零代码背景，2025年底开始自学AI，半年搭建完整AI系统。目标是让每个建材人都能用上AI。",list:["👤 秦志豪 (秦先森)","🏢 地老板美缝剂 · 品宣负责人","🤖 小白AI系统创始人","📱 微信: awei66888","🎯 建材行业AI实战派"]},
   spin: {title:"🎰 灵感轮盘",desc:"一键随机选题组合，帮你突破创意瓶颈。",list:["🎯 随机选题：产品×平台×形式","💡 创意组合：两两搭配","🔥 热门方向：当前趋势","📌 收藏灵感：留存好创意"]}
 };
 
