@@ -367,34 +367,6 @@ body.holo-mode .hero h1{text-shadow:0 0 30px rgba(0,212,255,.25),0 0 60px rgba(0
 body.holo-mode #particles{opacity:1}
 
 
-/* 满屏全息启动终端 */
-#bootScreen{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:radial-gradient(ellipse at center,#0a0a12,#050508);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'SF Mono','Menlo','Consolas',monospace;font-size:15px;color:var(--accent);padding:0;transition:opacity .8s;overflow:hidden}
-/* CRT扫描线 */
-#bootScreen::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.008) 2px,rgba(0,212,255,.008) 4px);pointer-events:none;z-index:2}
-/* 屏幕故障闪烁 */
-#bootScreen::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,212,255,.02);pointer-events:none;z-index:1;animation:bootFlicker .15s infinite;opacity:0}
-@keyframes bootFlicker{0%,100%{opacity:0}50%{opacity:.02}}
-#bootScreen.hide{opacity:0;pointer-events:none}
-/* 左上角系统信息 */
-.boot-header{position:absolute;top:30px;left:40px;font-size:10px;color:rgba(0,212,255,.2);line-height:1.6;font-family:'SF Mono',monospace}
-.boot-header .hl{color:rgba(0,212,255,.08)}
-/* 右上角 */
-.boot-ver{position:absolute;top:30px;right:40px;font-size:10px;color:rgba(0,212,255,.1);text-align:right;line-height:1.6}
-/* 中央内容 */
-.boot-content{position:relative;z-index:3;max-width:560px;width:90%}
-.boot-line{margin:4px 0;opacity:0;animation:bootAppear .2s forwards}
-.boot-line.ok{color:var(--green)}.boot-line.warn{color:var(--gold)}.boot-line.typing{overflow:hidden;white-space:nowrap;border-right:2px solid var(--accent);animation:bootType 1.5s steps(40) forwards,bootBlink .6s step-end 1.5s 3}
-@keyframes bootAppear{to{opacity:1}}
-@keyframes bootType{from{width:0}to{width:100%}}
-@keyframes bootBlink{50%{border-color:transparent}}
-.boot-cursor{display:inline-block;width:10px;height:18px;background:var(--accent);animation:bootPulse .8s infinite;margin-left:6px;vertical-align:middle;box-shadow:0 0 10px rgba(0,212,255,.3)}
-@keyframes bootPulse{0%,100%{opacity:1}50%{opacity:0}}
-.boot-progress{width:100%;height:1px;background:rgba(0,212,255,.05);margin:16px 0 20px;overflow:hidden;position:relative}
-.boot-progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--gold),var(--accent));background-size:200% 100%;animation:progressGlow 2s linear infinite;border-radius:1px;transition:width .4s}
-@keyframes progressGlow{0%{background-position:0%}100%{background-position:200%}}
-.boot-enter{margin-top:8px;opacity:0;transition:opacity .6s;cursor:pointer;text-align:center;font-size:14px}
-.boot-enter.show{opacity:1}
-.boot-enter:hover{text-shadow:0 0 30px rgba(0,212,255,.5),0 0 60px rgba(0,212,255,.2)}
 /* 底部状态栏 */
 .boot-footer{position:absolute;bottom:30px;left:40px;right:40px;display:flex;justify-content:space-between;font-size:9px;color:rgba(0,212,255,.08);font-family:'SF Mono',monospace}
 /* glitch效果 */
@@ -490,28 +462,6 @@ body.parallax .hero{transform:perspective(1000px)}
     <circle cx="14" cy="9" r="1" fill="rgba(0,212,255,.3)"/>
   </svg>
 </div>
-<!-- 满屏全息启动终端 -->
-<div id="bootScreen">
-  <div class="boot-header">
-    ◈ XIAOBAI.AI<br>
-    <span class="hl">━━━━━━━━━━</span><br>
-    KERNEL: v3.0.1<br>
-    BUILD: 2026.07.19
-  </div>
-  <div class="boot-ver">
-    SYSTEM: ACTIVE<br>
-    SEC: MAX<br>
-    NODE: ██████
-  </div>
-  <div class="boot-content" id="bootContent"></div>
-  <div class="boot-footer">
-    <span>© XIAOBAI SYSTEMS</span>
-    <span id="bootTimer">UPTIME: 00:00:00</span>
-    <span>ALL RIGHTS RESERVED</span>
-  </div>
-</div>
-
-<!-- 扫描线 -->
 <div class="scan-line"></div>
 
 <!-- 数字雨canvas -->
@@ -519,23 +469,6 @@ body.parallax .hero{transform:perspective(1000px)}
 <!-- 点击爆炸canvas -->
 <canvas id="clickBurst"></canvas>
 <!-- 代码闪屏 -->
-<div id="codeFlash"></div>
-<!-- 拖尾canvas -->
-<canvas id="trailCanvas"></canvas>
-
-<!-- 波浪canvas -->
-<canvas id="waveCanvas"></canvas>
-<!-- 全息模式按钮 -->
-<button class="holo-btn" id="holoBtn" onclick="toggleHolo()" title="全息模式">✦</button>
-
-<!-- HUD底部信息条 -->
-<div class="hud-bar">
-  <span class="item"><span class="dot" style="background:#00ff87"></span> SYSTEM: ONLINE</span>
-  <span class="hl"></span>
-  <span class="item" id="hudTime">⏱ LOADING...</span>
-  <span class="hl"></span>
-  <span class="item" id="hudUptime">⚡ UPTIME: --</span>
-  <span class="hl"></span>
   <span class="item" id="hudAI">🤖 AI: READY</span>
   <span class="hl"></span>
   <span class="item">⚡ v3.0</span>
@@ -1356,7 +1289,6 @@ const codeSnippets = [
   setTimeout(flashCode, 5000 + Math.random()*8000);
 })();
 
-// ===== 满屏全息启动终端 =====
 (async function boot(){
   const lines = [
     {t:'',d:0},
@@ -1377,116 +1309,6 @@ const codeSnippets = [
     {t:'<span style="color:rgba(0,212,255,.12);font-size:11px">────────────────────────────────────────</span>',d:200},
     {t:'',d:50},
     {t:'<span class="warn">⚠ OPERATOR DETECTED: CONSTRUCTION INDUSTRY AI PIONEER</span>',d:350},
-    {t:'<span class="warn">⚠ ACCESS LEVEL: OMEGA · FULL CLEARANCE · UNRESTRICTED</span>',d:300},
-    {t:'',d:100},
-    {t:'<span class="ok">✅ ALL SYSTEMS NOMINAL · 8/8 MODULES ONLINE</span>',d:350},
-    {t:'<span style="color:var(--accent);font-size:11px">✅ SYSTEM READY FOR OPERATOR INPUT</span>',d:300},
-    {t:'',d:50},
-  ];
-  const container = document.getElementById('bootContent');
-  const progressBar = document.createElement('div');
-  progressBar.className = 'boot-progress';
-  const progressFill = document.createElement('div');
-  progressFill.className = 'boot-progress-bar';
-  progressBar.appendChild(progressFill);
-  
-  // 计时器
-  let sec=0;
-  const timer = setInterval(()=>{
-    sec++;
-    const el = document.getElementById('bootTimer');
-    if(el)el.textContent = `UPTIME: ${String(Math.floor(sec/3600)).padStart(2,'0')}:${String(Math.floor(sec/60)%60).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
-  },1000);
-  
-  for(let i=0;i<lines.length;i++){
-    const l = lines[i];
-    if(l.d===0){const br=document.createElement('br');container.appendChild(br);continue}
-    const el = document.createElement('div');
-    el.className = 'boot-line' + (l.c==='typing'?' typing':'');
-    el.innerHTML = l.t;
-    container.appendChild(el);
-    progressFill.style.width = ((i+1)/lines.length*85)+'%';
-    await new Promise(r=>setTimeout(r,l.d));
-  }
-  
-  container.appendChild(progressBar);
-  setTimeout(()=>{progressFill.style.width='100%'},50);
-  await new Promise(r=>setTimeout(r,400));
-  
-  // glitch效果
-  document.getElementById('bootScreen').classList.add('glitched');
-  await new Promise(r=>setTimeout(r,600));
-  document.getElementById('bootScreen').classList.remove('glitched');
-  
-  const enter = document.createElement('div');
-  enter.className = 'boot-enter';
-  enter.innerHTML = '▶ <span style="color:var(--gold);font-weight:600">CLICK ANYWHERE TO ENTER THE SYSTEM</span> <span class="boot-cursor"></span>';
-  container.appendChild(enter);
-  setTimeout(()=>enter.classList.add('show'),100);
-  
-  const enterSys = ()=>{
-    clearInterval(timer);
-    document.getElementById('bootScreen').classList.add('hide');
-    setTimeout(()=>{document.getElementById('bootScreen').style.display='none'},800);
-  };
-  
-  enter.onclick = enterSys;
-  document.addEventListener('click', enterSys, {once:true});
-})();
-
-// ===== 鼠标拖尾粒子 =====
-const tc = document.getElementById('trailCanvas'), tctx = tc.getContext('2d');
-let tW, tH, trail=[];
-function trs(){tW=tc.width=innerWidth;tH=tc.height=innerHeight}
-trs();window.addEventListener('resize',trs);
-document.addEventListener('mousemove',e=>{
-  trail.push({x:e.clientX,y:e.clientY,life:1,r:Math.random()*3+1});
-  if(trail.length>50)trail.shift();
-});
-function drawTrail(){
-  tctx.clearRect(0,0,tW,tH);
-  trail.forEach((p,i)=>{
-    p.life -= 0.015;
-    tctx.beginPath();tctx.arc(p.x,p.y,p.r*p.life,0,6.28);
-    tctx.fillStyle=`rgba(0,212,255,${p.life*0.15})`;
-    tctx.fill();
-    if(i>0){tctx.beginPath();tctx.moveTo(trail[i-1].x,trail[i-1].y);tctx.lineTo(p.x,p.y);tctx.strokeStyle=`rgba(0,212,255,${p.life*0.08})`;tctx.lineWidth=0.5;tctx.stroke()}
-  });
-  trail = trail.filter(p=>p.life>0);
-  requestAnimationFrame(drawTrail);
-}
-drawTrail();
-
-// ===== 动态波浪 =====
-const wc = document.getElementById('waveCanvas'), wctx = wc.getContext('2d');
-let wW, wH, wTime=0;
-function wrs(){wW=wc.width=innerWidth;wH=wc.height=40}
-wrs();window.addEventListener('resize',wrs);
-function drawWave(){
-  wTime+=0.02;wctx.clearRect(0,0,wW,wH);
-  for(let w=0;w<3;w++){
-    wctx.beginPath();
-    for(let x=0;x<wW;x+=3){
-      const y = 20 + Math.sin(x*0.008 + wTime + w*2) * 8 + Math.sin(x*0.015 + wTime*1.3 + w*3) * 4;
-      x===0?wctx.moveTo(x,y):wctx.lineTo(x,y);
-    }
-    wctx.strokeStyle=`rgba(0,212,255,${0.08-w*0.02})`;
-    wctx.lineWidth=1.2-w*0.3;
-    wctx.stroke();
-  }
-  requestAnimationFrame(drawWave);
-}
-drawWave();
-
-// ===== 3D视差 =====
-document.addEventListener('mousemove',e=>{
-  document.body.classList.add('parallax');
-  const x = (e.clientX / window.innerWidth - 0.5) * 6;
-  const y = (e.clientY / window.innerHeight - 0.5) * 6;
-  document.querySelector('.hero').style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg)`;
-  // 卡片3D倾斜
-  document.querySelectorAll('.card').forEach(c=>{
-    const r = c.getBoundingClientRect();
     const cx = r.left + r.width/2, cy = r.top + r.height/2;
     const dx = (e.clientX - cx) / 30, dy = (e.clientY - cy) / 30;
     if(Math.abs(dx)<15&&Math.abs(dy)<15){
