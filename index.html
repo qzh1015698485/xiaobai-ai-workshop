@@ -472,16 +472,6 @@ body.parallax .hero{transform:perspective(1000px)}
 @keyframes ambientGlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 
 
-/* 语音输入按钮 */
-.voice-btn{position:fixed;bottom:60px;right:90px;z-index:96;width:44px;height:44px;border-radius:50%;border:1px solid rgba(0,212,255,.15);background:rgba(7,7,10,.6);backdrop-filter:blur(12px);color:var(--text2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .3s}
-.voice-btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 20px rgba(0,212,255,.1)}
-.voice-btn.listening{background:rgba(0,212,255,.1);border-color:var(--accent);color:var(--accent);animation:voicePulse 1s ease-in-out infinite;box-shadow:0 0 30px rgba(0,212,255,.15)}
-@keyframes voicePulse{0%,100%{box-shadow:0 0 20px rgba(0,212,255,.1)}50%{box-shadow:0 0 40px rgba(0,212,255,.2)}}
-.voice-btn .ripple-ring{position:absolute;width:52px;height:52px;border-radius:50%;border:1.5px solid rgba(0,212,255,.08);animation:rippleExpand 2s ease-out infinite;pointer-events:none}
-@keyframes rippleExpand{0%{transform:scale(1);opacity:.4}100%{transform:scale(1.5);opacity:0}}
-/* 语音状态提示 */
-.voice-status{position:fixed;bottom:110px;right:90px;z-index:96;font-size:10px;color:rgba(0,212,255,.3);font-family:'SF Mono',monospace;opacity:0;transition:opacity .3s;pointer-events:none}
-.voice-status.show{opacity:1}
 
 </style></head><body>
 <!-- AI观察者之眼 -->
@@ -839,75 +829,6 @@ MODEL:XIAOBAI-3.0 // STATUS:ACTIVE // UPTIME:∞
   <div class="asi" onclick="navTo(document.querySelector('.nlk a:nth-child(2)'),'ai');toggleAst()"><img src="images/avatar_ok.png" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;box-shadow:0 0 6px rgba(0,212,255,.2)"> AI对话</div>
   <div class="asi" onclick="spinBtn.click();toggleAst()"><img src="images/avatar_work.png" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;box-shadow:0 0 6px rgba(0,212,255,.2)"> 灵感轮盘</div>
   <div class="asi" onclick="jqGen();
-// ===== 语音输入 =====
-let recognition = null;
-let isListening = false;
-function toggleVoice(){
-  const btn = document.getElementById('voiceBtn');
-  const status = document.getElementById('voiceStatus');
-  
-  if(!recognition){
-    try{
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SpeechRecognition){status.textContent='❌ 浏览器不支持语音';status.classList.add('show');setTimeout(()=>status.classList.remove('show'),2000);return}
-      recognition = new SpeechRecognition();
-      recognition.lang = 'zh-CN';
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      
-      recognition.onresult = (e)=>{
-        const transcript = e.results[0][0].transcript;
-        status.textContent = '✅ "'+transcript+'"';
-        status.classList.add('show');
-        setTimeout(()=>status.classList.remove('show'),2000);
-        btn.classList.remove('listening');
-        isListening = false;
-        // 发送到AI对话
-        const chatIn = document.getElementById('chatIn');
-        if(chatIn){
-          chatIn.value = transcript;
-          // 触发发送
-          setTimeout(()=>{
-            const sendBtn = document.querySelector('#pane-chat .ciw button');
-            if(sendBtn)sendBtn.click();
-            // 滚动到AI区
-            document.getElementById('ai')?.scrollIntoView({behavior:'smooth'});
-          }, 300);
-        }
-      };
-      recognition.onerror = (e)=>{
-        status.textContent = '❌ 语音识别失败';
-        status.classList.add('show');
-        setTimeout(()=>status.classList.remove('show'),1500);
-        btn.classList.remove('listening');
-        isListening = false;
-      };
-      recognition.onend = ()=>{
-        btn.classList.remove('listening');
-        isListening = false;
-        setTimeout(()=>{status.textContent='点击🎤说话';status.classList.remove('show')},2000);
-      };
-    }catch(e){
-      status.textContent='❌ 语音不支持';
-      status.classList.add('show');
-      return;
-    }
-  }
-  
-  if(isListening){
-    recognition.stop();
-    btn.classList.remove('listening');
-    isListening = false;
-    status.textContent='⏹ 已停止';
-    setTimeout(()=>status.classList.remove('show'),1000);
-  } else {
-    recognition.start();
-    btn.classList.add('listening');
-    isListening = true;
-    status.textContent='🎤 正在听...';
-    status.classList.add('show');
-  }
-}
 
 // ===== Three.js 3D场景 =====
 (function init3D(){
@@ -1127,12 +1048,6 @@ toggleAst()"><span class="ai-ic">💬</span> 随机金句</div>
 </div>
 
 <div class="toast" id="toast"></div>
-<!-- 语音输入 -->
-<button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="语音输入">
-  <span class="ripple-ring"></span>
-  🎤
-</button>
-<div class="voice-status" id="voiceStatus">点击🎤开始说话</div>
 <button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1374,222 +1289,7 @@ function t(m){const e=document.getElementById('toast');e.textContent=m;e.classLi
 // 滚动
 window.addEventListener('scroll',()=>{const h=document.documentElement,p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;document.getElementById('pBar').style.width=p+'%';document.getElementById('backTop').classList.toggle('sh',h.scrollTop>350)});
 jqGen();
-// ===== 语音输入 =====
-let recognition = null;
-let isListening = false;
-function toggleVoice(){
-  const btn = document.getElementById('voiceBtn');
-  const status = document.getElementById('voiceStatus');
-  
-  if(!recognition){
-    try{
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SpeechRecognition){status.textContent='❌ 浏览器不支持语音';status.classList.add('show');setTimeout(()=>status.classList.remove('show'),2000);return}
-      recognition = new SpeechRecognition();
-      recognition.lang = 'zh-CN';
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      
-      recognition.onresult = (e)=>{
-        const transcript = e.results[0][0].transcript;
-        status.textContent = '✅ "'+transcript+'"';
-        status.classList.add('show');
-        setTimeout(()=>status.classList.remove('show'),2000);
-        btn.classList.remove('listening');
-        isListening = false;
-        // 发送到AI对话
-        const chatIn = document.getElementById('chatIn');
-        if(chatIn){
-          chatIn.value = transcript;
-          // 触发发送
-          setTimeout(()=>{
-            const sendBtn = document.querySelector('#pane-chat .ciw button');
-            if(sendBtn)sendBtn.click();
-            // 滚动到AI区
-            document.getElementById('ai')?.scrollIntoView({behavior:'smooth'});
-          }, 300);
-        }
-      };
-      recognition.onerror = (e)=>{
-        status.textContent = '❌ 语音识别失败';
-        status.classList.add('show');
-        setTimeout(()=>status.classList.remove('show'),1500);
-        btn.classList.remove('listening');
-        isListening = false;
-      };
-      recognition.onend = ()=>{
-        btn.classList.remove('listening');
-        isListening = false;
-        setTimeout(()=>{status.textContent='点击🎤说话';status.classList.remove('show')},2000);
-      };
-    }catch(e){
-      status.textContent='❌ 语音不支持';
-      status.classList.add('show');
-      return;
-    }
-  }
-  
-  if(isListening){
-    recognition.stop();
-    btn.classList.remove('listening');
-    isListening = false;
-    status.textContent='⏹ 已停止';
-    setTimeout(()=>status.classList.remove('show'),1000);
-  } else {
-    recognition.start();
-    btn.classList.add('listening');
-    isListening = true;
-    status.textContent='🎤 正在听...';
-    status.classList.add('show');
-  }
-}
 
-// ===== Three.js 3D场景 =====
-(function init3D(){
-  try{
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({alpha:true, antialias:true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.domElement.style.cssText = 'position:fixed;top:0;left:0;z-index:-2;pointer-events:none;opacity:.3';
-    document.body.prepend(renderer.domElement);
-    
-    // 粒子系统
-    const geometry = new THREE.BufferGeometry();
-    const count = 1500;
-    const positions = new Float32Array(count * 3);
-    const colors = new Float32Array(count * 3);
-    for(let i=0;i<count;i++){
-      const r = 200 + Math.random()*400;
-      const theta = Math.random()*Math.PI*2;
-      const phi = Math.acos(2*Math.random()-1);
-      positions[i*3] = r*Math.sin(phi)*Math.cos(theta);
-      positions[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
-      positions[i*3+2] = r*Math.cos(phi);
-      colors[i*3] = 0.1;colors[i*3+1]=0.6+Math.random()*0.4;colors[i*3+2]=0.8+Math.random()*0.2;
-    }
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions,3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors,3));
-    
-    const material = new THREE.PointsMaterial({
-      size: 1.5, vertexColors: true, transparent: true, opacity: 0.4,
-      blending: THREE.AdditiveBlending, depthWrite: false
-    });
-    const particles = new THREE.Points(geometry, material);
-    scene.add(particles);
-    
-    // 中心光晕
-    const glowGeo = new THREE.SphereGeometry(15, 16, 16);
-    const glowMat = new THREE.MeshBasicMaterial({color:0x00d4ff, transparent:true, opacity:0.05});
-    const glow = new THREE.Mesh(glowGeo, glowMat);
-    scene.add(glow);
-    
-    camera.position.z = 500;
-    
-    let angle = 0;
-    function animate(){
-      angle += 0.001;
-      particles.rotation.x += 0.0003;
-      particles.rotation.y += 0.0005;
-      particles.rotation.z += 0.0001;
-      glow.scale.setScalar(1+Math.sin(angle*2)*0.2);
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
-    }
-    animate();
-    
-    window.addEventListener('resize',()=>{
-      camera.aspect = window.innerWidth/window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  }catch(e){console.log('3D init:', e.message)}
-})();
-// ===== AI眼睛追踪鼠标 =====
-(function eyeTrack(){
-  const eye = document.getElementById('aiEye');
-  if(!eye)return;
-  const pupil = eye.querySelector('.eye-pupil');
-  document.addEventListener('mousemove',e=>{
-    const rx=(e.clientX/window.innerWidth-0.5)*4,ry=(e.clientY/window.innerHeight-0.5)*4;
-    if(pupil)pupil.style.transform=`translate(${rx}px,${ry}px)`;
-  });
-  // 慢眨眼
-  setInterval(()=>{
-    eye.style.opacity='.05';
-    setTimeout(()=>eye.style.opacity='.15',200);
-  },4000+Math.random()*3000);
-})();
-
-// ===== 3D景深视差 - 全页面 =====
-(function depthParallax(){
-  const layers = document.querySelectorAll('.hero, .feats, .st, .grid4, .grid3, .grid2, .acw, .ww, .gl, .ag');
-  document.addEventListener('mousemove',e=>{
-    const x=(e.clientX/window.innerWidth-0.5)*8,y=(e.clientY/window.innerHeight-0.5)*8;
-    layers.forEach((el,i)=>{
-      const d=(i%3+1)*0.3;
-      el.style.transform=`translate(${x*d}px,${y*d}px) perspective(800px) rotateY(${x*0.1}deg)`;
-      el.style.transition='transform .15s ease-out';
-    });
-  });
-})();
-
-
-
-// ===== 点击能量波纹 =====
-(function clickRipple(){
-  document.addEventListener('click',e=>{
-    const ripple=document.createElement('div');
-    ripple.style.cssText=`position:fixed;top:${e.clientY-30}px;left:${e.clientX-30}px;width:60px;height:60px;border-radius:50%;border:1px solid rgba(0,212,255,.2);z-index:9997;pointer-events:none;animation:rippleAnim .8s ease-out forwards`;
-    document.body.appendChild(ripple);
-    setTimeout(()=>ripple.remove(),800);
-  });
-  const style=document.createElement('style');
-  style.textContent='@keyframes rippleAnim{0%{transform:scale(0);opacity:.6}100%{transform:scale(4);opacity:0}}';
-  document.head.appendChild(style);
-})();
-// ===== Hero图粒子光环 =====
-const hpc = document.getElementById('heroParticles');
-if(hpc){
-  const htx = hpc.getContext('2d');
-  let hpW, hpH, hpAngle=0, hpPts=[];
-  function hprs(){
-    const r = hpc.parentElement.getBoundingClientRect();
-    hpW=hpc.width=r.width*1.2;hpH=hpc.height=r.height*1.2;
-    if(hpPts.length===0)for(let i=0;i<60;i++){
-      const a=Math.random()*Math.PI*2,d=Math.min(hpW,hpH)*0.4+Math.random()*20;
-      hpPts.push({angle:a,dist:d,speed:(Math.random()-0.5)*0.005,size:Math.random()*1.5+0.5,alpha:Math.random()*0.3+0.1});
-    }
-  }
-  hprs();window.addEventListener('resize',hprs);
-  function drawHP(){
-    hpAngle+=0.005;htx.clearRect(0,0,hpW,hpH);
-    htx.translate(hpW/2,hpH/2);
-    hpPts.forEach(p=>{
-      p.angle+=p.speed+Math.sin(hpAngle)*0.001;
-      const x=Math.cos(p.angle)*p.dist,y=Math.sin(p.angle)*p.dist;
-      htx.beginPath();htx.arc(x,y,p.size,0,6.28);
-      htx.fillStyle=`rgba(0,212,255,${p.alpha*(0.7+Math.sin(hpAngle+p.angle)*0.3)})`;
-      htx.fill();
-    });
-    // 连线
-    for(let i=0;i<hpPts.length;i+=2)for(let j=i+1;j<hpPts.length;j+=2){
-      const dx=hpPts[i].angle-hpPts[j].angle;
-      if(Math.abs(dx)<0.5){
-        htx.beginPath();htx.moveTo(Math.cos(hpPts[i].angle)*hpPts[i].dist,Math.sin(hpPts[i].angle)*hpPts[i].dist);
-        htx.lineTo(Math.cos(hpPts[j].angle)*hpPts[j].dist,Math.sin(hpPts[j].angle)*hpPts[j].dist);
-        htx.strokeStyle='rgba(0,212,255,0.02)';htx.lineWidth=0.3;htx.stroke();
-      }
-    }
-    htx.setTransform(1,0,0,1,0,0);
-    requestAnimationFrame(drawHP);
-  }
-  drawHP();
-}
-// ===== 数字雨 =====
-const mc = document.getElementById('matrixRain'), mctx = mc.getContext('2d');
-let mW, mH, drops=[], cols;
 function mrs(){mW=mc.width=innerWidth;mH=mc.height=innerHeight;cols=Math.floor(mW/14);drops=Array(cols).fill(1)}
 mrs();window.addEventListener('resize',mrs);
 const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF<>/{}[]|&^%$#@!';
@@ -1794,9 +1494,9 @@ document.addEventListener('mousemove',e=>{
     }
   });
 });
+</script>
 <!-- ===== 音乐播放器 ===== -->
 <style>
-/* 播放器容器 - 右下角浮动 */
 .music-player {
   position: fixed;
   bottom: 20px;
@@ -1938,7 +1638,6 @@ document.addEventListener('mousemove',e=>{
 </div>
 
 <script>
-// 免费音乐列表（SoundHelix免费曲目，可替换）
 const tracks = [
   { name: '🎵 小白AI · 数字脉冲', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
   { name: '🎵 小白AI · 数据流', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
@@ -1947,55 +1646,103 @@ const tracks = [
 let currentTrack = 0, isPlaying = false;
 const audio = new Audio();
 audio.volume = 0.3;
-
 function loadTrack(idx) {
   currentTrack = idx % tracks.length;
   audio.src = tracks[currentTrack].url;
   document.getElementById('trackName').textContent = tracks[currentTrack].name;
   if(isPlaying) audio.play();
 }
-
 function toggleMusic() {
-  const panel = document.getElementById('musicPanel');
-  panel.classList.toggle('show');
+  document.getElementById('musicPanel').classList.toggle('show');
 }
-
 function togglePlay() {
   if(!audio.src) loadTrack(0);
   if(audio.paused) {
-    audio.play();
-    isPlaying = true;
+    audio.play(); isPlaying = true;
     document.getElementById('playPauseBtn').textContent = '⏸';
     document.getElementById('musicBtn').classList.add('pulse');
   } else {
-    audio.pause();
-    isPlaying = false;
+    audio.pause(); isPlaying = false;
     document.getElementById('playPauseBtn').textContent = '▶';
     document.getElementById('musicBtn').classList.remove('pulse');
   }
 }
-
 function nextTrack() { loadTrack(currentTrack+1); if(!audio.paused) audio.play(); }
 function prevTrack() { loadTrack(currentTrack-1+tracks.length); if(!audio.paused) audio.play(); }
-
 function seekMusic(e) {
   const rect = e.currentTarget.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  audio.currentTime = pct * audio.duration;
+  audio.currentTime = (e.clientX - rect.left) / rect.width * audio.duration;
 }
-
 function changeVolume(v) { audio.volume = v; }
-
 audio.addEventListener('timeupdate', () => {
   if(audio.duration) {
-    const pct = (audio.currentTime / audio.duration * 100);
-    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressBar').style.width = (audio.currentTime / audio.duration * 100) + '%';
   }
 });
-
 audio.addEventListener('ended', nextTrack);
-
 loadTrack(0);
 </script>
 
+
+<!-- ===== 音乐播放器 ===== -->
+<style>
+.music-player {
+  position: fixed; bottom: 20px; right: 20px; z-index: 999;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--gold));
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #0a0a0a;
+  box-shadow: 0 0 20px rgba(0,212,255,.2), 0 4px 15px rgba(0,0,0,.4);
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+}
+.music-player:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(0,212,255,.4); }
+.music-player.pulse { animation: pulse 2s infinite; }
+@keyframes pulse {
+  0%,100%{box-shadow:0 0 20px rgba(0,212,255,.2)}
+  50%{box-shadow:0 0 30px rgba(0,212,255,.5),0 0 60px rgba(0,212,255,.2)}
+}
+.music-panel {
+  position: fixed; bottom: 78px; right: 20px; z-index: 998;
+  width: 280px; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px; display: none;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5); backdrop-filter: blur(20px);
+}
+.music-panel.show { display: block; }
+.music-panel .track-name { font-size: 12px; color: var(--text2); margin-bottom: 10px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.music-panel .progress { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 10px; cursor: pointer; position: relative; }
+.music-panel .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); border-radius: 2px; width: 0%; transition: width .1s; }
+.music-panel .controls { display: flex; align-items: center; justify-content: center; gap: 16px; }
+.music-panel .controls button { background: none; border: none; color: var(--text); cursor: pointer; font-size: 16px; padding: 4px; }
+.music-panel .controls .pp-btn { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; color: #0a0a0a; }
+.music-panel .volume-wrap { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.music-panel .volume-wrap input[type=range] { width: 100%; height: 3px; }
+</style>
+<button class="music-player pulse" id="musicBtn" onclick="toggleMusic()">🎵</button>
+<div class="music-panel" id="musicPanel">
+  <div class="track-name" id="trackName">🎵 小白AI · 赛博空间</div>
+  <div class="progress" onclick="seekMusic(event)"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="controls">
+    <button onclick="prevTrack()">⏮</button>
+    <button class="pp-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+    <button onclick="nextTrack()">⏭</button>
+  </div>
+  <div class="volume-wrap"><span class="vol-icon">🔊</span><input type="range" min="0" max="1" step="0.05" value="0.3" oninput="changeVolume(this.value)"></div>
+</div>
+<script>
+const tracks = [
+  {name:"🎵 数字脉冲",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+  {name:"🎵 数据流",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
+  {name:"🎵 神经网络",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"}
+];
+let cur=0, play=false; const au=new Audio(); au.volume=0.3;
+function ld(i){cur=i%tracks.length;au.src=tracks[cur].url;document.getElementById("trackName").textContent="🎵 小白AI · "+tracks[cur].name;if(play)au.play();}
+function tgM(){document.getElementById("musicPanel").classList.toggle("show");}
+function tgP(){if(!au.src)ld(0);if(au.paused){au.play();play=true;document.getElementById("playPauseBtn").textContent="⏸";document.getElementById("musicBtn").classList.add("pulse");}else{au.pause();play=false;document.getElementById("playPauseBtn").textContent="▶";document.getElementById("musicBtn").classList.remove("pulse");}}
+function nx(){ld(cur+1);if(!au.paused)au.play();}
+function pv(){ld(cur-1+tracks.length);if(!au.paused)au.play();}
+function sk(e){const r=e.currentTarget.getBoundingClientRect();au.currentTime=(e.clientX-r.left)/r.width*au.duration;}
+function chV(v){au.volume=v;}
+au.addEventListener("timeupdate",()=>{if(au.duration)document.getElementById("progressBar").style.width=(au.currentTime/au.duration*100)+"%";});
+au.addEventListener("ended",nx);ld(0);
+</script>
 </body></html>
